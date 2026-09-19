@@ -189,7 +189,11 @@ async function renderProgramsTable() {
   const body = document.getElementById('ptbl-body');
   body.innerHTML = `<tr class="empty-row"><td colspan="5">Loading...</td></tr>`;
   cachedPrograms = await loadPrograms();
+  renderProgramsTableFromCache();
+}
 
+function renderProgramsTableFromCache() {
+  const body = document.getElementById('ptbl-body');
   updateDashboardStats();
 
   if (!cachedPrograms.length) {
@@ -256,11 +260,35 @@ function closeProgramForm() {
   document.getElementById('pmodal').classList.remove('open');
 }
 
+// Resize/compress an image client-side before upload — keeps uploads fast on slow connections.
+function compressImage(file, maxDim = 1200, quality = 0.75) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => { img.src = e.target.result; };
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) { height = Math.round(height * maxDim / width); width = maxDim; }
+        else { width = Math.round(width * maxDim / height); height = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      canvas.toBlob((blob) => resolve(blob || file), 'image/jpeg', quality);
+    };
+    img.onerror = () => resolve(file);
+    reader.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+
 async function prevProgramImage(input) {
   if (!input.files?.[0]) return;
   const prev = document.getElementById('p-image-prev');
   prev.innerHTML = `<div style="color:var(--muted);font-size:.82rem;">⏳ Uploading...</div>`;
-  const result = await uploadToImgBB(input.files[0]);
+  const compressed = await compressImage(input.files[0]);
+  const result = await uploadToImgBB(compressed);
   if (result.success) {
     document.getElementById('p-image').value = result.url;
     document.getElementById('p-image-url').value = result.url;
@@ -286,11 +314,26 @@ async function saveProgram() {
     image: document.getElementById('p-image').value.trim()
   };
 
+  const saveBtn = document.querySelector('.fs-btn');
+  const prevLabel = saveBtn.textContent;
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving...';
+
   const result = id ? await updateProgram(id, program) : await addProgram(program);
+
+  saveBtn.disabled = false;
+  saveBtn.textContent = prevLabel;
+
   if (result.success) {
     toast(id ? "Program updated!" : "Program added!");
     closeProgramForm();
-    renderProgramsTable();
+    if (id) {
+      const idx = cachedPrograms.findIndex(p => p.id === id);
+      if (idx !== -1) cachedPrograms[idx] = { ...cachedPrograms[idx], ...program };
+    } else {
+      cachedPrograms.unshift({ id: result.id, ...program, createdAt: Date.now() });
+    }
+    renderProgramsTableFromCache();
   } else {
     toast(result.error || "Save failed!", true);
   }
@@ -300,7 +343,8 @@ async function deleteProgramAction(id) {
   if (!confirm("Delete this program?")) return;
   if (await deleteProgram(id)) {
     toast("Program deleted.");
-    renderProgramsTable();
+    cachedPrograms = cachedPrograms.filter(p => p.id !== id);
+    renderProgramsTableFromCache();
   } else {
     toast("Delete failed!", true);
   }
