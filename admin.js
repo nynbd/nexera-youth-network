@@ -1,30 +1,3 @@
-function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById(pageId);
-  if (target) target.classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const navBtn = document.querySelector(`.nav-item[data-page="${pageId}"]`);
-  if (navBtn) navBtn.classList.add('active');
-  closeSidebar();
-  window.scrollTo(0, 0);
-}
-
-function openSidebar() {
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('side-overlay').classList.add('show');
-}
-
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('side-overlay').classList.remove('show');
-}
-
-function initNav() {
-  document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
-    btn.addEventListener('click', () => showPage(btn.dataset.page));
-  });
-}
-
 function toast(msg, isErr) {
   const t = document.getElementById('toast');
   document.getElementById('toast-msg').textContent = msg;
@@ -75,6 +48,7 @@ function initAuthListener() {
       login.style.display = 'none';
       shell.style.display = 'block';
       populateForm();
+      renderProgramsTable();
     } else {
       login.style.display = 'flex';
       shell.style.display = 'none';
@@ -85,7 +59,6 @@ function initAuthListener() {
 document.addEventListener('DOMContentLoaded', async () => {
   await waitForFirebase();
   initAuthListener();
-  initNav();
 });
 
 async function populateForm() {
@@ -109,17 +82,6 @@ async function populateForm() {
   setVal('about-title', content.about?.title);
   setVal('about-text1', content.about?.text1);
   setVal('about-text2', content.about?.text2);
-
-  (content.programs || []).forEach((p, i) => {
-    setVal(`prog${i + 1}-title`, p?.title);
-    setVal(`prog${i + 1}-desc`, p?.desc);
-    setVal(`prog${i + 1}-img`, p?.image);
-    setVal(`prog${i + 1}-badge`, p?.badge);
-    setVal(`prog${i + 1}-date`, p?.date);
-    setVal(`prog${i + 1}-tag`, p?.tag);
-    setVal(`prog${i + 1}-location`, p?.location);
-    setVal(`prog${i + 1}-link`, p?.link);
-  });
 
   setVal('join-title', content.joinBanner?.title);
   setVal('join-text', content.joinBanner?.text);
@@ -151,16 +113,6 @@ async function saveAll() {
       text1: val('about-text1'),
       text2: val('about-text2')
     },
-    programs: [1, 2, 3, 4].map(i => ({
-      title: val(`prog${i}-title`),
-      desc: val(`prog${i}-desc`),
-      image: val(`prog${i}-img`),
-      badge: val(`prog${i}-badge`),
-      date: val(`prog${i}-date`),
-      tag: val(`prog${i}-tag`),
-      location: val(`prog${i}-location`),
-      link: val(`prog${i}-link`)
-    })),
     joinBanner: {
       title: val('join-title'),
       text: val('join-text')
@@ -188,5 +140,117 @@ async function saveAll() {
     toast("Saved! Refresh the website to see changes. ✅");
   } else {
     toast(result.error || "Save failed!", true);
+  }
+}
+
+/*===== PROGRAMS (Manage list — add/edit/delete) =====*/
+let cachedPrograms = [];
+
+async function renderProgramsTable() {
+  const body = document.getElementById('ptbl-body');
+  body.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Loading...</td></tr>`;
+  cachedPrograms = await loadPrograms();
+
+  if (!cachedPrograms.length) {
+    body.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">No programs yet. Click "+ Add Program" to create one.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = cachedPrograms.map(p => `
+    <tr>
+      <td>${p.image ? `<img class="thumb" src="${p.image}">` : `<div class="thumb-ph">📋</div>`}</td>
+      <td><strong>${p.title}</strong></td>
+      <td>${p.category || '—'}</td>
+      <td><span class="badge ${p.status || 'active'}">${p.status || 'active'}</span></td>
+      <td>
+        <div class="row-acts">
+          <button onclick="editProgram('${p.id}')">Edit</button>
+          <button class="del" onclick="deleteProgramAction('${p.id}')">Delete</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function openProgramForm() {
+  document.getElementById('pmodal-title').textContent = "Add Program";
+  document.getElementById('p-id').value = '';
+  document.getElementById('p-title').value = '';
+  document.getElementById('p-category').value = 'Leadership';
+  document.getElementById('p-status').value = 'active';
+  document.getElementById('p-short').value = '';
+  document.getElementById('p-full').value = '';
+  document.getElementById('p-image').value = '';
+  document.getElementById('p-image-url').value = '';
+  document.getElementById('p-image-prev').innerHTML = '';
+  document.getElementById('pmodal').classList.add('open');
+}
+
+function editProgram(id) {
+  const p = cachedPrograms.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('pmodal-title').textContent = "Edit Program";
+  document.getElementById('p-id').value = p.id;
+  document.getElementById('p-title').value = p.title || '';
+  document.getElementById('p-category').value = p.category || 'Leadership';
+  document.getElementById('p-status').value = p.status || 'active';
+  document.getElementById('p-short').value = p.short || '';
+  document.getElementById('p-full').value = p.full || '';
+  document.getElementById('p-image').value = p.image || '';
+  document.getElementById('p-image-url').value = p.image || '';
+  document.getElementById('p-image-prev').innerHTML = p.image ? `<img src="${p.image}">` : '';
+  document.getElementById('pmodal').classList.add('open');
+}
+
+function closeProgramForm() {
+  document.getElementById('pmodal').classList.remove('open');
+}
+
+async function prevProgramImage(input) {
+  if (!input.files?.[0]) return;
+  const prev = document.getElementById('p-image-prev');
+  prev.innerHTML = `<div style="color:var(--muted);font-size:.82rem;">⏳ Uploading...</div>`;
+  const result = await uploadToImgBB(input.files[0]);
+  if (result.success) {
+    document.getElementById('p-image').value = result.url;
+    document.getElementById('p-image-url').value = result.url;
+    prev.innerHTML = `<img src="${result.url}">`;
+  } else {
+    prev.innerHTML = `<div style="color:#c0392b;font-size:.82rem;">❌ Upload failed</div>`;
+  }
+}
+
+async function saveProgram() {
+  const id = document.getElementById('p-id').value;
+  const title = document.getElementById('p-title').value.trim();
+  const short = document.getElementById('p-short').value.trim();
+  if (!title) return toast("Program title is required!", true);
+  if (!short) return toast("Short description is required!", true);
+
+  const program = {
+    title,
+    category: document.getElementById('p-category').value,
+    status: document.getElementById('p-status').value,
+    short,
+    full: document.getElementById('p-full').value.trim(),
+    image: document.getElementById('p-image').value.trim()
+  };
+
+  const result = id ? await updateProgram(id, program) : await addProgram(program);
+  if (result.success) {
+    toast(id ? "Program updated!" : "Program added!");
+    closeProgramForm();
+    renderProgramsTable();
+  } else {
+    toast(result.error || "Save failed!", true);
+  }
+}
+
+async function deleteProgramAction(id) {
+  if (!confirm("Delete this program?")) return;
+  if (await deleteProgram(id)) {
+    toast("Program deleted.");
+    renderProgramsTable();
+  } else {
+    toast("Delete failed!", true);
   }
 }
