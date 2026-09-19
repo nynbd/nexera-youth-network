@@ -20,6 +20,12 @@ function doLogin() {
     return;
   }
 
+  if (!window.firebaseAuthFunctions || !window.firebaseAuth) {
+    err.textContent = "Still connecting — please wait a second and try again.";
+    err.classList.add('show');
+    return;
+  }
+
   btn.disabled = true;
   btn.textContent = "Logging in...";
   const { signInWithEmailAndPassword } = window.firebaseAuthFunctions;
