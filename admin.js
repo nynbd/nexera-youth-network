@@ -1,3 +1,30 @@
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(pageId);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navBtn = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+  if (navBtn) navBtn.classList.add('active');
+  closeSidebar();
+  window.scrollTo(0, 0);
+}
+
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('side-overlay').classList.add('show');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('side-overlay').classList.remove('show');
+}
+
+function initNav() {
+  document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
+    btn.addEventListener('click', () => showPage(btn.dataset.page));
+  });
+}
+
 function toast(msg, isErr) {
   const t = document.getElementById('toast');
   document.getElementById('toast-msg').textContent = msg;
@@ -58,6 +85,7 @@ function initAuthListener() {
 document.addEventListener('DOMContentLoaded', async () => {
   await waitForFirebase();
   initAuthListener();
+  initNav();
 });
 
 async function populateForm() {

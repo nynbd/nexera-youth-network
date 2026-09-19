@@ -8,16 +8,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#14315C;--navy-dk:#0D1B2A;--orange:#F5821F;
+  --navy:#14315C;--orange:#F5821F;--orange-dk:#D96D0F;
   --bg:#F5F7FA;--card:#FFFFFF;--ink:#0D1B2A;--muted:#5B6472;--line:#E3E7EC;
+  --side-bg:#0D1420;--side-bg2:#101828;--side-ink:#EAF0FA;--side-muted:#8B96A8;--side-line:rgba(255,255,255,.08);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
 h1,h2{font-family:'Montserrat',sans-serif;}
 
 /* Login */
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
-.login-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:36px 32px;width:100%;max-width:380px;text-align:center;box-shadow:0 10px 40px rgba(20,49,92,.12);}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--side-bg);}
+.login-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:36px 32px;width:100%;max-width:380px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.35);}
 .login-box h1{font-size:1.25rem;font-weight:800;color:var(--navy);margin-bottom:4px;}
 .login-box p{color:var(--muted);font-size:.85rem;margin-bottom:24px;}
 .lbl{display:block;font-size:.76rem;font-weight:600;color:var(--muted);margin-bottom:6px;text-align:left;}
@@ -30,13 +31,69 @@ h1,h2{font-family:'Montserrat',sans-serif;}
 .btn-pri:hover{opacity:.9;}
 .btn-pri:disabled{opacity:.6;cursor:not-allowed;}
 
-/* Shell */
-.shell{display:none;max-width:900px;margin:0 auto;padding:26px 18px 80px;}
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
-.topbar h1{font-size:1.3rem;font-weight:800;color:var(--navy);}
-.topbar h1 span{color:var(--orange);}
-.logout-btn{background:none;border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;}
-.logout-btn:hover{background:#fff;color:var(--ink);}
+/* ===== SHELL / SIDEBAR LAYOUT ===== */
+.shell{display:none;min-height:100vh;}
+.dash{display:flex;min-height:100vh;}
+
+.sidebar{
+  width:260px;flex-shrink:0;background:var(--side-bg);border-right:1px solid var(--side-line);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;
+  transform:translateX(0);transition:transform .25s ease;z-index:200;
+}
+.side-brand{display:flex;align-items:center;gap:12px;padding:22px 20px;border-bottom:1px solid var(--side-line);}
+.side-brand-badge{width:38px;height:38px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.side-brand-badge svg{width:20px;height:20px;}
+.side-brand-text{font-size:1.02rem;font-weight:800;color:var(--side-ink);line-height:1.15;}
+.side-brand-text span{display:block;font-size:.68rem;font-weight:700;color:var(--side-muted);letter-spacing:.06em;}
+
+.side-nav{flex:1;padding:18px 12px;}
+.side-group-label{font-size:.68rem;font-weight:700;color:var(--side-muted);letter-spacing:.08em;padding:14px 10px 8px;text-transform:uppercase;}
+.side-group-label:first-child{padding-top:0;}
+.nav-item{
+  display:flex;align-items:center;gap:11px;width:100%;background:none;border:none;text-align:left;
+  color:var(--side-muted);font-family:inherit;font-size:.88rem;font-weight:600;padding:10px 12px;
+  border-radius:9px;cursor:pointer;margin-bottom:2px;
+}
+.nav-item .ic{font-size:1.05rem;width:20px;text-align:center;flex-shrink:0;}
+.nav-item:hover{background:rgba(255,255,255,.05);color:var(--side-ink);}
+.nav-item.active{background:rgba(245,130,31,.14);color:#fff;}
+.nav-item.soon{opacity:.5;cursor:default;}
+.nav-item.soon:hover{background:none;color:var(--side-muted);}
+
+.side-foot{padding:16px 14px;border-top:1px solid var(--side-line);display:flex;gap:8px;}
+.side-foot a,.side-foot button{
+  flex:1;background:transparent;border:1px solid var(--side-line);color:var(--side-ink);
+  padding:9px 10px;border-radius:8px;font-size:.8rem;font-weight:600;font-family:inherit;
+  cursor:pointer;text-decoration:none;text-align:center;
+}
+.side-foot a:hover,.side-foot button:hover{background:rgba(255,255,255,.06);}
+
+/* Mobile drawer controls */
+.side-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190;}
+.side-overlay.show{display:block;}
+.mtop{display:none;position:sticky;top:0;z-index:150;background:var(--side-bg);color:#fff;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--side-line);}
+.mtop-title{font-weight:800;font-size:1rem;}
+.hbtn{background:none;border:1px solid var(--side-line);color:#fff;width:38px;height:38px;border-radius:8px;font-size:1.1rem;cursor:pointer;}
+
+/* Main content */
+.main{margin-left:260px;flex:1;min-width:0;padding:28px 26px 90px;}
+.page{display:none;}
+.page.active{display:block;}
+.page-head{margin-bottom:22px;}
+.page-head h1{font-size:1.35rem;font-weight:800;color:var(--navy);}
+.page-head p{color:var(--muted);font-size:.86rem;margin-top:4px;}
+
+/* Dashboard stat cards */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:22px;}
+.stat-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;}
+.stat-card .lbl2{color:var(--muted);font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;}
+.stat-card .num{font-size:1.9rem;font-weight:800;color:var(--navy);font-family:'Montserrat',sans-serif;}
+.quick-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+.qlink{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;text-decoration:none;color:var(--ink);cursor:pointer;}
+.qlink:hover{border-color:var(--orange);}
+.qlink .ic{font-size:1.4rem;}
+.qlink div strong{display:block;font-size:.9rem;}
+.qlink div span{color:var(--muted);font-size:.78rem;}
 
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:18px;}
 .card h2{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line);}
@@ -51,6 +108,10 @@ h1,h2{font-family:'Montserrat',sans-serif;}
 .sub-block:last-child{margin-bottom:0;}
 .sub-block-label{font-size:.76rem;font-weight:700;color:var(--orange);margin-bottom:10px;}
 
+.soon-box{background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:40px 24px;text-align:center;color:var(--muted);}
+.soon-box .ic{font-size:2rem;margin-bottom:10px;}
+.soon-box strong{display:block;color:var(--ink);font-size:.98rem;margin-bottom:6px;}
+
 .save-bar{position:sticky;bottom:0;background:var(--bg);padding:16px 0;margin-top:6px;}
 .save-btn{width:100%;background:var(--navy);color:#fff;padding:15px;border-radius:10px;font-weight:700;font-size:.95rem;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(20,49,92,.25);}
 .save-btn:hover{opacity:.92;}
@@ -61,6 +122,13 @@ h1,h2{font-family:'Montserrat',sans-serif;}
 .toast.err{background:#c0392b;}
 
 @media(max-width:560px){.row2{grid-template-columns:1fr;}}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.4);}
+  .main{margin-left:0;padding:22px 16px 90px;}
+  .mtop{display:flex;}
+}
 </style>
 </head>
 <body>
@@ -81,128 +149,240 @@ h1,h2{font-family:'Montserrat',sans-serif;}
 
 <!-- SHELL -->
 <div class="shell" id="shell">
-  <div class="topbar">
-    <h1>NYN <span>Admin</span></h1>
-    <button class="logout-btn" onclick="doLogout()">Logout</button>
-  </div>
+  <div class="dash">
 
-  <div class="card">
-    <h2>🏠 Hero Section</h2>
-    <div class="fg"><label>Eyebrow text</label><input id="hero-eyebrow" placeholder="NextEra Youth Network"></div>
-    <div class="fg"><label>Headline</label><input id="hero-headline" placeholder="Where ideas meet impact."></div>
-    <div class="fg"><label>Subtext</label><textarea id="hero-sub" placeholder="We bring young people together..."></textarea></div>
-  </div>
+    <div class="side-overlay" id="side-overlay" onclick="closeSidebar()"></div>
 
-  <div class="card">
-    <h2>📊 Stats Strip</h2>
-    <div class="row2">
-      <div class="sub-block">
-        <div class="sub-block-label">STAT 1</div>
-        <div class="fg"><label>Number</label><input id="stat1-num" placeholder="500+"></div>
-        <div class="fg"><label>Label</label><input id="stat1-label" placeholder="Active Members"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="side-brand">
+        <div class="side-brand-badge">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 14 8 20 8 15 12 17 18 12 14 7 18 9 12 4 8 10 8Z" fill="#fff"/></svg>
+        </div>
+        <div class="side-brand-text">NextEra<span>YOUTH NETWORK</span></div>
       </div>
-      <div class="sub-block">
-        <div class="sub-block-label">STAT 2</div>
-        <div class="fg"><label>Number</label><input id="stat2-num" placeholder="30+"></div>
-        <div class="fg"><label>Label</label><input id="stat2-label" placeholder="Programs Run"></div>
+
+      <nav class="side-nav">
+        <div class="side-group-label">Overview</div>
+        <button class="nav-item active" data-page="page-dashboard">📊 <span>Dashboard</span></button>
+
+        <div class="side-group-label">Content</div>
+        <button class="nav-item" data-page="page-home">🏠 <span>Home Page</span></button>
+        <button class="nav-item" data-page="page-programs">📋 <span>Programs</span></button>
+        <button class="nav-item soon" data-page="page-soon-team">🧑‍🤝‍🧑 <span>Team Members</span></button>
+        <button class="nav-item soon" data-page="page-soon-news">📰 <span>News</span></button>
+
+        <div class="side-group-label">Inbox</div>
+        <button class="nav-item soon" data-page="page-soon-msgs">✉️ <span>Messages</span></button>
+        <button class="nav-item soon" data-page="page-soon-reg">📝 <span>Registrations</span></button>
+
+        <div class="side-group-label">Notice &amp; Settings</div>
+        <button class="nav-item" data-page="page-settings">⚙️ <span>Settings</span></button>
+      </nav>
+
+      <div class="side-foot">
+        <a href="index.html">← Site</a>
+        <button onclick="doLogout()">Logout</button>
       </div>
-      <div class="sub-block">
-        <div class="sub-block-label">STAT 3</div>
-        <div class="fg"><label>Number</label><input id="stat3-num" placeholder="18"></div>
-        <div class="fg"><label>Label</label><input id="stat3-label" placeholder="Community Projects"></div>
+    </aside>
+
+    <div style="flex:1;min-width:0;">
+      <div class="mtop">
+        <button class="hbtn" onclick="openSidebar()">☰</button>
+        <div class="mtop-title">NYN Admin</div>
+        <button class="hbtn" onclick="doLogout()" title="Logout">⏻</button>
       </div>
-      <div class="sub-block">
-        <div class="sub-block-label">STAT 4</div>
-        <div class="fg"><label>Number</label><input id="stat4-num" placeholder="12"></div>
-        <div class="fg"><label>Label</label><input id="stat4-label" placeholder="Partner Organizations"></div>
-      </div>
+
+      <main class="main">
+
+        <!-- DASHBOARD -->
+        <div class="page active" id="page-dashboard">
+          <div class="page-head">
+            <h1>Dashboard</h1>
+            <p>Quick overview of your site content.</p>
+          </div>
+          <div class="stat-grid">
+            <div class="stat-card"><div class="lbl2">Programs</div><div class="num">4</div></div>
+            <div class="stat-card"><div class="lbl2">Home Sections</div><div class="num">7</div></div>
+            <div class="stat-card"><div class="lbl2">Social Links</div><div class="num">3</div></div>
+          </div>
+          <div class="quick-links">
+            <div class="qlink" onclick="showPage('page-home')"><span class="ic">🏠</span><div><strong>Edit Home Page</strong><span>Hero, About, Contact &amp; more</span></div></div>
+            <div class="qlink" onclick="showPage('page-programs')"><span class="ic">📋</span><div><strong>Edit Programs</strong><span>4 program cards</span></div></div>
+            <a class="qlink" href="index.html" target="_blank"><span class="ic">🔗</span><div><strong>View Live Site</strong><span>Opens in new tab</span></div></a>
+          </div>
+        </div>
+
+        <!-- HOME PAGE -->
+        <div class="page" id="page-home">
+          <div class="page-head">
+            <h1>Home Page</h1>
+            <p>Edit hero, stats, about, banner, contact, social &amp; footer.</p>
+          </div>
+
+          <div class="card">
+            <h2>🏠 Hero Section</h2>
+            <div class="fg"><label>Eyebrow text</label><input id="hero-eyebrow" placeholder="NextEra Youth Network"></div>
+            <div class="fg"><label>Headline</label><input id="hero-headline" placeholder="Where ideas meet impact."></div>
+            <div class="fg"><label>Subtext</label><textarea id="hero-sub" placeholder="We bring young people together..."></textarea></div>
+          </div>
+
+          <div class="card">
+            <h2>📊 Stats Strip</h2>
+            <div class="row2">
+              <div class="sub-block">
+                <div class="sub-block-label">STAT 1</div>
+                <div class="fg"><label>Number</label><input id="stat1-num" placeholder="500+"></div>
+                <div class="fg"><label>Label</label><input id="stat1-label" placeholder="Active Members"></div>
+              </div>
+              <div class="sub-block">
+                <div class="sub-block-label">STAT 2</div>
+                <div class="fg"><label>Number</label><input id="stat2-num" placeholder="30+"></div>
+                <div class="fg"><label>Label</label><input id="stat2-label" placeholder="Programs Run"></div>
+              </div>
+              <div class="sub-block">
+                <div class="sub-block-label">STAT 3</div>
+                <div class="fg"><label>Number</label><input id="stat3-num" placeholder="18"></div>
+                <div class="fg"><label>Label</label><input id="stat3-label" placeholder="Community Projects"></div>
+              </div>
+              <div class="sub-block">
+                <div class="sub-block-label">STAT 4</div>
+                <div class="fg"><label>Number</label><input id="stat4-num" placeholder="12"></div>
+                <div class="fg"><label>Label</label><input id="stat4-label" placeholder="Partner Organizations"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>🎯 About / Mission</h2>
+            <div class="fg"><label>Title</label><input id="about-title" placeholder="Young people don't need to wait for permission to lead."></div>
+            <div class="fg"><label>Paragraph 1</label><textarea id="about-text1"></textarea></div>
+            <div class="fg"><label>Paragraph 2</label><textarea id="about-text2"></textarea></div>
+          </div>
+
+          <div class="card">
+            <h2>📣 "Get Involved" Banner</h2>
+            <div class="fg"><label>Title</label><input id="join-title" placeholder="Ready to build something that matters?"></div>
+            <div class="fg"><label>Text</label><textarea id="join-text"></textarea></div>
+          </div>
+
+          <div class="card">
+            <h2>📞 Contact Info</h2>
+            <div class="row2">
+              <div class="fg"><label>Email</label><input id="contact-email" placeholder="hello@nextera-youth.org"></div>
+              <div class="fg"><label>Phone</label><input id="contact-phone" placeholder="+880 1XXX-XXXXXX"></div>
+            </div>
+            <div class="fg"><label>Location</label><input id="contact-location" placeholder="Dhaka, Bangladesh"></div>
+          </div>
+
+          <div class="card">
+            <h2>🔗 Social Links</h2>
+            <div class="fg"><label>Facebook URL</label><input id="social-fb" placeholder="https://facebook.com/..."></div>
+            <div class="fg"><label>Instagram URL</label><input id="social-ig" placeholder="https://instagram.com/..."></div>
+            <div class="fg"><label>LinkedIn URL</label><input id="social-li" placeholder="https://linkedin.com/..."></div>
+          </div>
+
+          <div class="card">
+            <h2>📄 Footer</h2>
+            <div class="fg"><label>Footer description</label><textarea id="footer-desc"></textarea></div>
+          </div>
+
+          <div class="save-bar">
+            <button class="save-btn" onclick="saveAll()">💾 Save All Changes</button>
+          </div>
+        </div>
+
+        <!-- PROGRAMS -->
+        <div class="page" id="page-programs">
+          <div class="page-head">
+            <h1>Programs</h1>
+            <p>Edit the 4 program cards shown on the homepage.</p>
+          </div>
+
+          <div class="card">
+            <div class="sub-block">
+              <div class="sub-block-label">PROGRAM 1</div>
+              <div class="fg"><label>Title</label><input id="prog1-title" placeholder="Leadership Training"></div>
+              <div class="fg"><label>Description</label><textarea id="prog1-desc"></textarea></div>
+              <div class="fg"><label>Image URL</label><input id="prog1-img" placeholder="https://..."></div>
+              <div class="fg"><label>Badge (e.g. Open / Ongoing / Upcoming / Past)</label><input id="prog1-badge" placeholder="Ongoing"></div>
+              <div class="fg"><label>Date / Duration</label><input id="prog1-date" placeholder="Year-round"></div>
+              <div class="fg"><label>Category tag</label><input id="prog1-tag" placeholder="Leadership"></div>
+              <div class="fg"><label>Location</label><input id="prog1-location" placeholder="In-person"></div>
+              <div class="fg"><label>Read More link</label><input id="prog1-link" placeholder="https:// or #join"></div>
+            </div>
+            <div class="sub-block">
+              <div class="sub-block-label">PROGRAM 2</div>
+              <div class="fg"><label>Title</label><input id="prog2-title" placeholder="Workshops"></div>
+              <div class="fg"><label>Description</label><textarea id="prog2-desc"></textarea></div>
+              <div class="fg"><label>Image URL</label><input id="prog2-img" placeholder="https://..."></div>
+              <div class="fg"><label>Badge (e.g. Open / Ongoing / Upcoming / Past)</label><input id="prog2-badge" placeholder="Open"></div>
+              <div class="fg"><label>Date / Duration</label><input id="prog2-date" placeholder="Monthly"></div>
+              <div class="fg"><label>Category tag</label><input id="prog2-tag" placeholder="Skills"></div>
+              <div class="fg"><label>Location</label><input id="prog2-location" placeholder="Online"></div>
+              <div class="fg"><label>Read More link</label><input id="prog2-link" placeholder="https:// or #join"></div>
+            </div>
+            <div class="sub-block">
+              <div class="sub-block-label">PROGRAM 3</div>
+              <div class="fg"><label>Title</label><input id="prog3-title" placeholder="Community Projects"></div>
+              <div class="fg"><label>Description</label><textarea id="prog3-desc"></textarea></div>
+              <div class="fg"><label>Image URL</label><input id="prog3-img" placeholder="https://..."></div>
+              <div class="fg"><label>Badge (e.g. Open / Ongoing / Upcoming / Past)</label><input id="prog3-badge" placeholder="Upcoming"></div>
+              <div class="fg"><label>Date / Duration</label><input id="prog3-date" placeholder="8–10 weeks"></div>
+              <div class="fg"><label>Category tag</label><input id="prog3-tag" placeholder="Community"></div>
+              <div class="fg"><label>Location</label><input id="prog3-location" placeholder="Local"></div>
+              <div class="fg"><label>Read More link</label><input id="prog3-link" placeholder="https:// or #join"></div>
+            </div>
+            <div class="sub-block">
+              <div class="sub-block-label">PROGRAM 4</div>
+              <div class="fg"><label>Title</label><input id="prog4-title" placeholder="Networking Events"></div>
+              <div class="fg"><label>Description</label><textarea id="prog4-desc"></textarea></div>
+              <div class="fg"><label>Image URL</label><input id="prog4-img" placeholder="https://..."></div>
+              <div class="fg"><label>Badge (e.g. Open / Ongoing / Upcoming / Past)</label><input id="prog4-badge" placeholder="Monthly"></div>
+              <div class="fg"><label>Date / Duration</label><input id="prog4-date" placeholder="Every month"></div>
+              <div class="fg"><label>Category tag</label><input id="prog4-tag" placeholder="Networking"></div>
+              <div class="fg"><label>Location</label><input id="prog4-location" placeholder="Hybrid"></div>
+              <div class="fg"><label>Read More link</label><input id="prog4-link" placeholder="https:// or #join"></div>
+            </div>
+          </div>
+
+          <div class="save-bar">
+            <button class="save-btn" onclick="saveAll()">💾 Save All Changes</button>
+          </div>
+        </div>
+
+        <!-- SETTINGS (placeholder — nothing extra configured yet) -->
+        <div class="page" id="page-settings">
+          <div class="page-head">
+            <h1>Settings</h1>
+            <p>Account &amp; site settings.</p>
+          </div>
+          <div class="soon-box">
+            <div class="ic">⚙️</div>
+            <strong>Nothing to configure here yet</strong>
+            Login is managed through Firebase Authentication directly.
+          </div>
+        </div>
+
+        <!-- COMING SOON PLACEHOLDERS -->
+        <div class="page" id="page-soon-team">
+          <div class="page-head"><h1>Team Members</h1></div>
+          <div class="soon-box"><div class="ic">🧑‍🤝‍🧑</div><strong>Not set up yet</strong>This section isn't built into the site yet — ask to have it added if you want it.</div>
+        </div>
+        <div class="page" id="page-soon-news">
+          <div class="page-head"><h1>News</h1></div>
+          <div class="soon-box"><div class="ic">📰</div><strong>Not set up yet</strong>This section isn't built into the site yet — ask to have it added if you want it.</div>
+        </div>
+        <div class="page" id="page-soon-msgs">
+          <div class="page-head"><h1>Messages</h1></div>
+          <div class="soon-box"><div class="ic">✉️</div><strong>Not set up yet</strong>The contact form doesn't save submissions yet — ask to have it added if you want it.</div>
+        </div>
+        <div class="page" id="page-soon-reg">
+          <div class="page-head"><h1>Registrations</h1></div>
+          <div class="soon-box"><div class="ic">📝</div><strong>Not set up yet</strong>This section isn't built into the site yet — ask to have it added if you want it.</div>
+        </div>
+
+      </main>
     </div>
-  </div>
-
-  <div class="card">
-    <h2>🎯 About / Mission</h2>
-    <div class="fg"><label>Title</label><input id="about-title" placeholder="Young people don't need to wait for permission to lead."></div>
-    <div class="fg"><label>Paragraph 1</label><textarea id="about-text1"></textarea></div>
-    <div class="fg"><label>Paragraph 2</label><textarea id="about-text2"></textarea></div>
-  </div>
-
-  <div class="card">
-    <h2>📋 Programs</h2>
-    <div class="sub-block">
-      <div class="sub-block-label">PROGRAM 1</div>
-      <div class="fg"><label>Title</label><input id="prog1-title" placeholder="Leadership Training"></div>
-      <div class="fg"><label>Description</label><textarea id="prog1-desc"></textarea></div>
-      <div class="fg"><label>Image URL</label><input id="prog1-img" placeholder="https://..."></div>
-      <div class="fg"><label>Badge (e.g. Open / Ongoing / Upcoming / Past)</label><input id="prog1-badge" placeholder="Ongoing"></div>
-      <div class="fg"><label>Date / Duration</label><input id="prog1-date" placeholder="Year-round"></div>
-      <div class="fg"><label>Category tag</label><input id="prog1-tag" placeholder="Leadership"></div>
-      <div class="fg"><label>Location</label><input id="prog1-location" placeholder="In-person"></div>
-      <div class="fg"><label>Read More link</label><input id="prog1-link" placeholder="https:// or #join"></div>
-    </div>
-    <div class="sub-block">
-      <div class="sub-block-label">PROGRAM 2</div>
-      <div class="fg"><label>Title</label><input id="prog2-title" placeholder="Workshops"></div>
-      <div class="fg"><label>Description</label><textarea id="prog2-desc"></textarea></div>
-      <div class="fg"><label>Image URL</label><input id="prog2-img" placeholder="https://..."></div>
-      <div class="fg"><label>Badge (e.g. Open / Ongoing / Upcoming / Past)</label><input id="prog2-badge" placeholder="Open"></div>
-      <div class="fg"><label>Date / Duration</label><input id="prog2-date" placeholder="Monthly"></div>
-      <div class="fg"><label>Category tag</label><input id="prog2-tag" placeholder="Skills"></div>
-      <div class="fg"><label>Location</label><input id="prog2-location" placeholder="Online"></div>
-      <div class="fg"><label>Read More link</label><input id="prog2-link" placeholder="https:// or #join"></div>
-    </div>
-    <div class="sub-block">
-      <div class="sub-block-label">PROGRAM 3</div>
-      <div class="fg"><label>Title</label><input id="prog3-title" placeholder="Community Projects"></div>
-      <div class="fg"><label>Description</label><textarea id="prog3-desc"></textarea></div>
-      <div class="fg"><label>Image URL</label><input id="prog3-img" placeholder="https://..."></div>
-      <div class="fg"><label>Badge (e.g. Open / Ongoing / Upcoming / Past)</label><input id="prog3-badge" placeholder="Upcoming"></div>
-      <div class="fg"><label>Date / Duration</label><input id="prog3-date" placeholder="8–10 weeks"></div>
-      <div class="fg"><label>Category tag</label><input id="prog3-tag" placeholder="Community"></div>
-      <div class="fg"><label>Location</label><input id="prog3-location" placeholder="Local"></div>
-      <div class="fg"><label>Read More link</label><input id="prog3-link" placeholder="https:// or #join"></div>
-    </div>
-    <div class="sub-block">
-      <div class="sub-block-label">PROGRAM 4</div>
-      <div class="fg"><label>Title</label><input id="prog4-title" placeholder="Networking Events"></div>
-      <div class="fg"><label>Description</label><textarea id="prog4-desc"></textarea></div>
-      <div class="fg"><label>Image URL</label><input id="prog4-img" placeholder="https://..."></div>
-      <div class="fg"><label>Badge (e.g. Open / Ongoing / Upcoming / Past)</label><input id="prog4-badge" placeholder="Monthly"></div>
-      <div class="fg"><label>Date / Duration</label><input id="prog4-date" placeholder="Every month"></div>
-      <div class="fg"><label>Category tag</label><input id="prog4-tag" placeholder="Networking"></div>
-      <div class="fg"><label>Location</label><input id="prog4-location" placeholder="Hybrid"></div>
-      <div class="fg"><label>Read More link</label><input id="prog4-link" placeholder="https:// or #join"></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>📣 "Get Involved" Banner</h2>
-    <div class="fg"><label>Title</label><input id="join-title" placeholder="Ready to build something that matters?"></div>
-    <div class="fg"><label>Text</label><textarea id="join-text"></textarea></div>
-  </div>
-
-  <div class="card">
-    <h2>📞 Contact Info</h2>
-    <div class="row2">
-      <div class="fg"><label>Email</label><input id="contact-email" placeholder="hello@nextera-youth.org"></div>
-      <div class="fg"><label>Phone</label><input id="contact-phone" placeholder="+880 1XXX-XXXXXX"></div>
-    </div>
-    <div class="fg"><label>Location</label><input id="contact-location" placeholder="Dhaka, Bangladesh"></div>
-  </div>
-
-  <div class="card">
-    <h2>🔗 Social Links</h2>
-    <div class="fg"><label>Facebook URL</label><input id="social-fb" placeholder="https://facebook.com/..."></div>
-    <div class="fg"><label>Instagram URL</label><input id="social-ig" placeholder="https://instagram.com/..."></div>
-    <div class="fg"><label>LinkedIn URL</label><input id="social-li" placeholder="https://linkedin.com/..."></div>
-  </div>
-
-  <div class="card">
-    <h2>📄 Footer</h2>
-    <div class="fg"><label>Footer description</label><textarea id="footer-desc"></textarea></div>
-  </div>
-
-  <div class="save-bar">
-    <button class="save-btn" id="save-btn" onclick="saveAll()">💾 Save All Changes</button>
   </div>
 </div>
 
