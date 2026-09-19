@@ -4,218 +4,309 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Admin — NextEra Youth Network</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Admin Panel — NextEra Youth Network</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#14315C;--navy-dk:#0D1B2A;--orange:#F5821F;
-  --bg:#F5F7FA;--card:#FFFFFF;--ink:#0D1B2A;--muted:#5B6472;--line:#E3E7EC;
+  --navy:#14315C;--navy-dk:#0D1B2A;--navy-lt:#1B3A6B;
+  --orange:#F5821F;--orange-dk:#D96D0F;
+  --bg:#F5F7FA;--card:#FFFFFF;--card2:#F5F7FA;
+  --ink:#0D1B2A;--muted:#5B6472;--line:#E3E7EC;--line2:#D3D9E0;
+  --r:12px;--r2:9px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
-h1,h2{font-family:'Montserrat',sans-serif;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);}
+h1,h2,h3{font-family:'Montserrat',sans-serif;}
+
+#admin-wrap{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;background:var(--bg);}
 
 /* Login */
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
-.login-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:36px 32px;width:100%;max-width:380px;text-align:center;box-shadow:0 10px 40px rgba(20,49,92,.12);}
-.login-box h1{font-size:1.25rem;font-weight:800;color:var(--navy);margin-bottom:4px;}
-.login-box p{color:var(--muted);font-size:.85rem;margin-bottom:24px;}
-.lbl{display:block;font-size:.76rem;font-weight:600;color:var(--muted);margin-bottom:6px;text-align:left;}
-.inp{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:11px 13px;border-radius:8px;font-size:.9rem;outline:none;margin-bottom:14px;font-family:inherit;}
+.adm-login{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(20,49,92,.08) 0%,transparent 70%),var(--bg);padding:16px;}
+.login-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:40px 36px;width:100%;max-width:380px;text-align:center;box-shadow:0 10px 40px rgba(20,49,92,.12);}
+@media(max-width:440px){.login-box{padding:28px 20px;}}
+.login-box h2{font-size:1.3rem;font-weight:800;color:var(--navy);margin-bottom:4px;}
+.login-box .ls{color:var(--muted);font-size:.85rem;margin-bottom:24px;}
+.lbl{display:block;font-size:.76rem;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:.04em;text-align:left;}
+.inp{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--ink);padding:11px 13px;border-radius:8px;font-size:.9rem;outline:none;margin-bottom:14px;font-family:inherit;}
 .inp:focus{border-color:var(--orange);}
-.err{color:#e04848;font-size:.8rem;margin:-6px 0 12px;display:none;text-align:left;}
-.err.show{display:block;}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:8px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;transition:opacity .2s,transform .15s;}
-.btn-pri{background:var(--orange);color:#fff;width:100%;}
+.login-err{color:#c0392b;font-size:.8rem;margin:-6px 0 12px;display:none;text-align:left;}
+.login-err.show{display:block;}
+.btn-pri{background:var(--orange);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;width:100%;}
 .btn-pri:hover{opacity:.9;}
 .btn-pri:disabled{opacity:.6;cursor:not-allowed;}
 
 /* Shell */
-.shell{display:none;max-width:900px;margin:0 auto;padding:26px 18px 80px;}
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
-.topbar h1{font-size:1.3rem;font-weight:800;color:var(--navy);}
-.topbar h1 span{color:var(--orange);}
-.logout-btn{background:none;border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;}
-.logout-btn:hover{background:#fff;color:var(--ink);}
+.adm-shell{display:flex;flex:1;height:100%;overflow:hidden;}
+.adm-sb{width:220px;flex-shrink:0;background:var(--navy-dk);color:#fff;display:flex;flex-direction:column;height:100%;overflow-y:auto;transition:transform .3s;}
+.adm-sb-head{padding:18px 16px 16px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:10px;}
+.adm-sb-head .logo-dot{width:34px;height:34px;border-radius:9px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-weight:800;font-family:Montserrat;flex-shrink:0;}
+.adm-sb-head span{font-family:Montserrat;font-size:.9rem;font-weight:800;}
+.adm-nav{flex:1;padding:14px 10px;overflow-y:auto;}
+.adm-ns{font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:#7E90AC;font-weight:700;padding:0 8px;margin:16px 0 5px;}
+.adm-ns:first-child{margin-top:0;}
+.adm-nb{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;color:#B9C6DC;padding:9px 10px;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:500;transition:background .15s,color .15s;text-align:left;white-space:nowrap;}
+.adm-nb:hover,.adm-nb.active{background:rgba(245,130,31,.14);color:#fff;}
+.adm-nb.active{color:var(--orange);}
+.adm-nb .ico{width:17px;text-align:center;}
+.adm-sb-footer{padding:14px 10px;border-top:1px solid rgba(255,255,255,.1);display:flex;gap:8px;flex-shrink:0;}
+.adm-sb-footer button{flex:1;background:none;border:1px solid rgba(255,255,255,.15);color:#B9C6DC;padding:8px 4px;border-radius:7px;cursor:pointer;font-size:.78rem;font-weight:600;}
+.adm-sb-footer button:hover{background:rgba(255,255,255,.06);color:#fff;}
+.adm-sb-footer .lb-btn:hover{background:rgba(192,57,43,.15);color:#e57373;}
+.sb-overlay{display:none;position:fixed;inset:0;z-index:11;background:rgba(0,0,0,.5);}
+.sb-overlay.open{display:block;}
+.adm-main{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.adm-topbar{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line);background:var(--card);flex-shrink:0;flex-wrap:wrap;}
+.menu-toggle-btn{background:none;border:1px solid var(--line);color:var(--ink);padding:7px 10px;border-radius:7px;cursor:pointer;font-size:1rem;flex-shrink:0;display:none;}
+.adm-page-title{font-size:1.15rem;font-weight:800;color:var(--navy);flex:1;}
+.add-btn{background:var(--orange);color:#fff;border:none;padding:9px 18px;border-radius:7px;font-size:.83rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.add-btn:hover{opacity:.9;}
+.save-btn{background:var(--navy);color:#fff;border:none;padding:9px 18px;border-radius:7px;font-size:.83rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.save-btn:hover{opacity:.9;}
+.adm-sec{display:none;padding:24px;flex:1;max-width:920px;}
+.adm-sec.active{display:block;}
 
+/* Dashboard */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:22px;}
+.stat-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:18px;}
+.stat-card .sl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:7px;}
+.stat-card .sv{font-family:Montserrat;font-size:1.9rem;font-weight:800;color:var(--navy);}
+
+/* Cards / forms */
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:18px;}
 .card h2{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line);}
-.fg{margin-bottom:14px;}
+.fg{margin-bottom:15px;}
 .fg:last-child{margin-bottom:0;}
-.fg label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:6px;}
-.fg input,.fg textarea,.fg select{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:10px 13px;border-radius:8px;font-size:.9rem;outline:none;font-family:inherit;transition:border-color .2s;}
-.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--orange);}
-.fg textarea{min-height:70px;resize:vertical;}
+.fg label{display:block;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:6px;}
+.fi{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--ink);padding:10px 13px;border-radius:8px;font-size:.9rem;outline:none;font-family:inherit;transition:border-color .2s;}
+.fi:focus{border-color:var(--orange);}
+textarea.fi{min-height:70px;resize:vertical;}
+.he-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:640px){.he-grid{grid-template-columns:1fr;}}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.sub-block{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px;}
+@media(max-width:560px){.row2{grid-template-columns:1fr;}}
+.sub-block{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px;}
 .sub-block:last-child{margin-bottom:0;}
-.sub-block-label{font-size:.76rem;font-weight:700;color:var(--orange);margin-bottom:10px;}
+.sub-block-label{font-size:.74rem;font-weight:700;color:var(--orange-dk);margin-bottom:10px;}
 
-.save-bar{position:sticky;bottom:0;background:var(--bg);padding:16px 0;margin-top:6px;}
-.save-btn{width:100%;background:var(--navy);color:#fff;padding:15px;border-radius:10px;font-weight:700;font-size:.95rem;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(20,49,92,.25);}
-.save-btn:hover{opacity:.92;}
-.save-btn:disabled{opacity:.6;cursor:not-allowed;}
+/* Tables */
+.tbl-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;overflow-x:auto;}
+.tbl{width:100%;border-collapse:collapse;min-width:480px;}
+.tbl th{background:var(--card2);color:var(--muted);font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:.85rem;vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:rgba(245,130,31,.03);}
+.thumb{width:46px;height:34px;object-fit:cover;border-radius:5px;border:1px solid var(--line);}
+.thumb-ph{width:46px;height:34px;border-radius:5px;border:1px solid var(--line);background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--muted);}
+.tbl-acts{display:flex;gap:7px;}
+.tbl-acts button{background:none;border:1px solid var(--line);color:var(--muted);padding:5px 11px;border-radius:5px;cursor:pointer;font-size:.75rem;font-weight:600;white-space:nowrap;}
+.tbl-acts .e-btn:hover{background:rgba(245,130,31,.1);color:var(--orange-dk);border-color:var(--orange);}
+.tbl-acts .d-btn:hover{background:rgba(192,57,43,.1);color:#c0392b;border-color:rgba(192,57,43,.3);}
+.bs{padding:3px 9px;border-radius:4px;font-size:.68rem;font-weight:700;}
+.bs.active{background:rgba(34,197,94,.14);color:#1a9c5a;}
+.bs.upcoming{background:rgba(245,130,31,.14);color:var(--orange-dk);}
+.bs.closed,.bs.draft{background:rgba(107,114,128,.14);color:#6b7280;}
+.empty-row td{text-align:center;color:var(--muted);padding:32px!important;}
 
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy);color:#fff;padding:13px 22px;border-radius:10px;font-size:.87rem;font-weight:600;transition:transform .3s;z-index:1000;box-shadow:0 8px 24px rgba(0,0,0,.2);}
+/* Modal */
+.fm-ov{position:fixed;inset:0;z-index:6000;background:rgba(13,27,42,.55);display:flex;align-items:flex-start;justify-content:center;padding:24px 14px;opacity:0;pointer-events:none;transition:opacity .2s;overflow-y:auto;}
+.fm-ov.open{opacity:1;pointer-events:all;}
+.fm{background:var(--card);border-radius:15px;width:100%;max-width:520px;margin:auto;padding:26px;}
+@media(max-width:500px){.fm{padding:18px 14px;border-radius:10px;}}
+.fm-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.fm-head h3{font-size:1.05rem;font-weight:800;color:var(--navy);}
+.fm-head button{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;}
+.fm-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+.fc-btn{background:none;border:1px solid var(--line);color:var(--muted);padding:10px 20px;border-radius:8px;font-size:.86rem;font-weight:600;cursor:pointer;}
+.fc-btn:hover{background:var(--card2);color:var(--ink);}
+.fs-btn{background:var(--navy);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:.86rem;font-weight:700;cursor:pointer;}
+.up-area{border:2px dashed var(--line2);border-radius:9px;padding:18px;text-align:center;cursor:pointer;background:var(--card2);margin-bottom:10px;}
+.up-area:hover{border-color:var(--orange);}
+.up-area p{font-size:.8rem;color:var(--muted);}
+.up-prev img{max-height:90px;border-radius:7px;margin-top:8px;}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy);color:#fff;padding:13px 22px;border-radius:10px;font-size:.87rem;font-weight:600;transition:transform .3s;z-index:9000;box-shadow:0 8px 24px rgba(0,0,0,.2);}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.err{background:#c0392b;}
 
-@media(max-width:560px){.row2{grid-template-columns:1fr;}}
-
-/* Programs list table */
-.mini-btn{background:var(--orange);color:#fff;border:none;padding:9px 16px;border-radius:8px;font-weight:700;font-size:.82rem;cursor:pointer;}
-.mini-btn:hover{opacity:.9;}
-.ptbl{width:100%;border-collapse:collapse;font-size:.86rem;}
-.ptbl th{text-align:left;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;padding:8px 10px;border-bottom:1px solid var(--line);}
-.ptbl td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle;}
-.ptbl img.thumb{width:40px;height:40px;object-fit:cover;border-radius:6px;background:var(--bg);}
-.ptbl .thumb-ph{width:40px;height:40px;border-radius:6px;background:var(--bg);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--muted);}
-.badge{display:inline-block;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;}
-.badge.active{background:rgba(34,197,94,.14);color:#1a9c5a;}
-.badge.upcoming{background:rgba(245,130,31,.14);color:var(--orange);}
-.badge.closed{background:rgba(107,114,128,.14);color:#6b7280;}
-.badge.draft{background:rgba(107,114,128,.14);color:#6b7280;}
-.row-acts{display:flex;gap:8px;justify-content:flex-end;white-space:nowrap;}
-.row-acts button{background:none;border:1px solid var(--line);padding:6px 12px;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;color:var(--ink);}
-.row-acts button.del{color:#c0392b;border-color:rgba(192,57,43,.3);}
-.row-acts button:hover{background:var(--bg);}
-
-/* Modal */
-.modal-ov{position:fixed;inset:0;background:rgba(13,27,42,.5);display:none;align-items:flex-start;justify-content:center;z-index:2000;padding:24px 14px;overflow-y:auto;}
-.modal-ov.open{display:flex;}
-.modal{background:var(--card);border-radius:14px;padding:24px;width:100%;max-width:520px;margin:auto;}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
-.modal-head h3{font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy);}
-.modal-head button{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--muted);}
-.up-area{border:2px dashed var(--line);border-radius:9px;padding:18px;text-align:center;cursor:pointer;background:var(--bg);margin-bottom:10px;}
-.up-area p{font-size:.8rem;color:var(--muted);}
-.up-prev img{max-height:90px;border-radius:7px;margin-top:8px;}
-.modal-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
-.modal-foot button{padding:10px 20px;border-radius:8px;font-weight:700;font-size:.86rem;border:none;cursor:pointer;}
-.modal-foot .cancel{background:var(--bg);color:var(--ink);border:1px solid var(--line);}
-.modal-foot .save{background:var(--navy);color:#fff;}
+@media(max-width:700px){
+  .adm-sb{position:fixed;left:0;top:0;bottom:0;z-index:12;transform:translateX(-100%);width:220px;}
+  .adm-sb.open{transform:translateX(0);}
+  .menu-toggle-btn{display:block;}
+  .adm-sec{padding:16px;}
+  .adm-topbar{padding:12px 14px;}
+}
+@media(min-width:701px){.sb-overlay{display:none!important;}}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div class="login-wrap" id="login-wrap">
-  <div class="login-box">
-    <h1>NYN Admin</h1>
-    <p>Sign in to edit site content</p>
-    <label class="lbl">EMAIL</label>
-    <input class="inp" type="email" id="lu" placeholder="admin@email.com" onkeydown="if(event.key==='Enter')doLogin()">
-    <label class="lbl">PASSWORD</label>
-    <input class="inp" type="password" id="lp" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
-    <div class="err" id="lerr"></div>
-    <button class="btn btn-pri" id="login-btn" onclick="doLogin()">Login</button>
-  </div>
-</div>
+<div id="admin-wrap">
 
-<!-- SHELL -->
-<div class="shell" id="shell">
-  <div class="topbar">
-    <h1>NYN <span>Admin</span></h1>
-    <button class="logout-btn" onclick="doLogout()">Logout</button>
-  </div>
-
-  <div class="card">
-    <h2>🏠 Hero Section</h2>
-    <div class="fg"><label>Eyebrow text</label><input id="hero-eyebrow" placeholder="NextEra Youth Network"></div>
-    <div class="fg"><label>Headline</label><input id="hero-headline" placeholder="Where ideas meet impact."></div>
-    <div class="fg"><label>Subtext</label><textarea id="hero-sub" placeholder="We bring young people together..."></textarea></div>
-  </div>
-
-  <div class="card">
-    <h2>📊 Stats Strip</h2>
-    <div class="row2">
-      <div class="sub-block">
-        <div class="sub-block-label">STAT 1</div>
-        <div class="fg"><label>Number</label><input id="stat1-num" placeholder="500+"></div>
-        <div class="fg"><label>Label</label><input id="stat1-label" placeholder="Active Members"></div>
-      </div>
-      <div class="sub-block">
-        <div class="sub-block-label">STAT 2</div>
-        <div class="fg"><label>Number</label><input id="stat2-num" placeholder="30+"></div>
-        <div class="fg"><label>Label</label><input id="stat2-label" placeholder="Programs Run"></div>
-      </div>
-      <div class="sub-block">
-        <div class="sub-block-label">STAT 3</div>
-        <div class="fg"><label>Number</label><input id="stat3-num" placeholder="18"></div>
-        <div class="fg"><label>Label</label><input id="stat3-label" placeholder="Community Projects"></div>
-      </div>
-      <div class="sub-block">
-        <div class="sub-block-label">STAT 4</div>
-        <div class="fg"><label>Number</label><input id="stat4-num" placeholder="12"></div>
-        <div class="fg"><label>Label</label><input id="stat4-label" placeholder="Partner Organizations"></div>
-      </div>
+  <!-- LOGIN -->
+  <div class="adm-login" id="adm-login">
+    <div class="login-box">
+      <h2>NYN Admin</h2>
+      <p class="ls">NextEra Youth Network — Staff Only</p>
+      <label class="lbl">EMAIL</label>
+      <input class="inp" type="email" id="lu" placeholder="admin@email.com" onkeydown="if(event.key==='Enter')doLogin()">
+      <label class="lbl">PASSWORD</label>
+      <input class="inp" type="password" id="lp" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+      <div class="login-err" id="lerr"></div>
+      <button class="btn-pri" id="login-btn" onclick="doLogin()">Login</button>
     </div>
   </div>
 
-  <div class="card">
-    <h2>🎯 About / Mission</h2>
-    <div class="fg"><label>Title</label><input id="about-title" placeholder="Young people don't need to wait for permission to lead."></div>
-    <div class="fg"><label>Paragraph 1</label><textarea id="about-text1"></textarea></div>
-    <div class="fg"><label>Paragraph 2</label><textarea id="about-text2"></textarea></div>
-  </div>
+  <!-- SHELL -->
+  <div class="adm-shell" id="adm-shell" style="display:none;">
+    <div class="sb-overlay" id="sb-ov" onclick="closeSidebar()"></div>
 
-  <div class="card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line);">
-      <h2 style="margin:0;padding:0;border:none;">📋 Manage Programs</h2>
-      <button class="mini-btn mini-btn-add" onclick="openProgramForm()">+ Add Program</button>
+    <!-- Sidebar -->
+    <div class="adm-sb" id="adm-sb">
+      <div class="adm-sb-head">
+        <div class="logo-dot">N</div>
+        <span>NYN Admin</span>
+      </div>
+      <nav class="adm-nav">
+        <div class="adm-ns">Overview</div>
+        <button class="adm-nb active" data-sec="dash" onclick="goSec(this)"><span class="ico">📊</span>Dashboard</button>
+
+        <div class="adm-ns">Content</div>
+        <button class="adm-nb" data-sec="home-ed" onclick="goSec(this)"><span class="ico">🏠</span>Home Page</button>
+        <button class="adm-nb" data-sec="prog-adm" onclick="goSec(this)"><span class="ico">📋</span>Programs</button>
+
+        <div class="adm-ns">Settings</div>
+        <button class="adm-nb" data-sec="site-adm" onclick="goSec(this)"><span class="ico">⚙️</span>Site Info</button>
+      </nav>
+      <div class="adm-sb-footer">
+        <button onclick="window.location.href='index.html'">← Site</button>
+        <button class="lb-btn" onclick="doLogout()">Logout</button>
+      </div>
     </div>
-    <div style="overflow-x:auto;">
-      <table class="ptbl">
-        <thead><tr><th>Image</th><th>Title</th><th>Category</th><th>Status</th><th></th></tr></thead>
-        <tbody id="ptbl-body"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Loading...</td></tr></tbody>
-      </table>
+
+    <!-- Main -->
+    <div class="adm-main">
+      <div class="adm-topbar" id="adm-topbar">
+        <button class="menu-toggle-btn" onclick="openSidebar()">☰</button>
+        <span class="adm-page-title" id="adm-ptitle">Dashboard</span>
+        <div id="adm-topbar-actions"></div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div class="adm-sec active" id="dash">
+        <div class="stats-row" id="db-stats">
+          <div class="stat-card"><div class="sl">Total Programs</div><div class="sv" id="db-prog-total">—</div></div>
+          <div class="stat-card"><div class="sl">Active</div><div class="sv" id="db-prog-active">—</div></div>
+          <div class="stat-card"><div class="sl">Upcoming</div><div class="sv" id="db-prog-upcoming">—</div></div>
+          <div class="stat-card"><div class="sl">Draft</div><div class="sv" id="db-prog-draft">—</div></div>
+        </div>
+        <div class="card">
+          <h2>Quick Links</h2>
+          <p style="color:var(--muted);font-size:.88rem;line-height:1.7;">
+            Use <strong>Home Page</strong> to edit the hero headline, stats strip, about section, and "Get Involved" banner.<br>
+            Use <strong>Programs</strong> to add, edit, or remove program cards shown on the site.<br>
+            Use <strong>Site Info</strong> to update contact details, social links, and the footer description.
+          </p>
+        </div>
+      </div>
+
+      <!-- HOME PAGE EDITOR -->
+      <div class="adm-sec" id="home-ed">
+        <div class="he-grid">
+          <div>
+            <div class="card" style="margin-bottom:20px;">
+              <h2>🏠 Hero Section</h2>
+              <div class="fg"><label>Eyebrow text</label><input class="fi" id="hero-eyebrow" placeholder="NextEra Youth Network"></div>
+              <div class="fg"><label>Headline</label><input class="fi" id="hero-headline" placeholder="Where ideas meet impact."></div>
+              <div class="fg"><label>Subtext</label><textarea class="fi" id="hero-sub"></textarea></div>
+            </div>
+            <div class="card">
+              <h2>🎯 About / Mission</h2>
+              <div class="fg"><label>Title</label><input class="fi" id="about-title"></div>
+              <div class="fg"><label>Paragraph 1</label><textarea class="fi" id="about-text1"></textarea></div>
+              <div class="fg"><label>Paragraph 2</label><textarea class="fi" id="about-text2"></textarea></div>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:20px;">
+              <h2>📊 Stats Strip</h2>
+              <div class="sub-block">
+                <div class="sub-block-label">STAT 1</div>
+                <div class="fg"><label>Number</label><input class="fi" id="stat1-num" placeholder="500+"></div>
+                <div class="fg"><label>Label</label><input class="fi" id="stat1-label" placeholder="Active Members"></div>
+              </div>
+              <div class="sub-block">
+                <div class="sub-block-label">STAT 2</div>
+                <div class="fg"><label>Number</label><input class="fi" id="stat2-num" placeholder="30+"></div>
+                <div class="fg"><label>Label</label><input class="fi" id="stat2-label" placeholder="Programs Run"></div>
+              </div>
+              <div class="sub-block">
+                <div class="sub-block-label">STAT 3</div>
+                <div class="fg"><label>Number</label><input class="fi" id="stat3-num" placeholder="18"></div>
+                <div class="fg"><label>Label</label><input class="fi" id="stat3-label" placeholder="Community Projects"></div>
+              </div>
+              <div class="sub-block">
+                <div class="sub-block-label">STAT 4</div>
+                <div class="fg"><label>Number</label><input class="fi" id="stat4-num" placeholder="12"></div>
+                <div class="fg"><label>Label</label><input class="fi" id="stat4-label" placeholder="Partner Organizations"></div>
+              </div>
+            </div>
+            <div class="card">
+              <h2>📣 "Get Involved" Banner</h2>
+              <div class="fg"><label>Title</label><input class="fi" id="join-title"></div>
+              <div class="fg"><label>Text</label><textarea class="fi" id="join-text"></textarea></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROGRAMS -->
+      <div class="adm-sec" id="prog-adm">
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Image</th><th>Title</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="ptbl-body"><tr class="empty-row"><td colspan="5">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SITE INFO -->
+      <div class="adm-sec" id="site-adm">
+        <div class="card" style="margin-bottom:20px;">
+          <h2>📞 Contact Info</h2>
+          <div class="row2">
+            <div class="fg"><label>Email</label><input class="fi" id="contact-email" placeholder="hello@nextera-youth.org"></div>
+            <div class="fg"><label>Phone</label><input class="fi" id="contact-phone" placeholder="+880 1XXX-XXXXXX"></div>
+          </div>
+          <div class="fg"><label>Location</label><input class="fi" id="contact-location" placeholder="Dhaka, Bangladesh"></div>
+        </div>
+        <div class="card" style="margin-bottom:20px;">
+          <h2>🔗 Social Links</h2>
+          <div class="fg"><label>Facebook URL</label><input class="fi" id="social-fb" placeholder="https://facebook.com/..."></div>
+          <div class="fg"><label>Instagram URL</label><input class="fi" id="social-ig" placeholder="https://instagram.com/..."></div>
+          <div class="fg"><label>LinkedIn URL</label><input class="fi" id="social-li" placeholder="https://linkedin.com/..."></div>
+        </div>
+        <div class="card">
+          <h2>📄 Footer</h2>
+          <div class="fg"><label>Footer description</label><textarea class="fi" id="footer-desc"></textarea></div>
+        </div>
+      </div>
+
     </div>
-  </div>
-
-  <div class="card">
-    <h2>📣 "Get Involved" Banner</h2>
-    <div class="fg"><label>Title</label><input id="join-title" placeholder="Ready to build something that matters?"></div>
-    <div class="fg"><label>Text</label><textarea id="join-text"></textarea></div>
-  </div>
-
-  <div class="card">
-    <h2>📞 Contact Info</h2>
-    <div class="row2">
-      <div class="fg"><label>Email</label><input id="contact-email" placeholder="hello@nextera-youth.org"></div>
-      <div class="fg"><label>Phone</label><input id="contact-phone" placeholder="+880 1XXX-XXXXXX"></div>
-    </div>
-    <div class="fg"><label>Location</label><input id="contact-location" placeholder="Dhaka, Bangladesh"></div>
-  </div>
-
-  <div class="card">
-    <h2>🔗 Social Links</h2>
-    <div class="fg"><label>Facebook URL</label><input id="social-fb" placeholder="https://facebook.com/..."></div>
-    <div class="fg"><label>Instagram URL</label><input id="social-ig" placeholder="https://instagram.com/..."></div>
-    <div class="fg"><label>LinkedIn URL</label><input id="social-li" placeholder="https://linkedin.com/..."></div>
-  </div>
-
-  <div class="card">
-    <h2>📄 Footer</h2>
-    <div class="fg"><label>Footer description</label><textarea id="footer-desc"></textarea></div>
-  </div>
-
-  <div class="save-bar">
-    <button class="save-btn" id="save-btn" onclick="saveAll()">💾 Save All Changes</button>
   </div>
 </div>
 
 <!-- ADD/EDIT PROGRAM MODAL -->
-<div class="modal-ov" id="pmodal" onclick="if(event.target===this)closeProgramForm()">
-  <div class="modal">
-    <div class="modal-head">
+<div class="fm-ov" id="pmodal" onclick="if(event.target===this)closeProgramForm()">
+  <div class="fm">
+    <div class="fm-head">
       <h3 id="pmodal-title">Add Program</h3>
       <button onclick="closeProgramForm()">✕</button>
     </div>
     <input type="hidden" id="p-id">
-    <div class="fg"><label>Title *</label><input id="p-title" placeholder="e.g. Leadership Training"></div>
+    <div class="fg"><label>Title *</label><input class="fi" id="p-title" placeholder="e.g. Leadership Training"></div>
     <div class="row2">
       <div class="fg"><label>Category</label>
-        <select id="p-category" class="inp" style="margin-bottom:0;">
+        <select class="fi" id="p-category">
           <option>Leadership</option>
           <option>Workshop</option>
           <option>Community Project</option>
@@ -224,7 +315,7 @@ h1,h2{font-family:'Montserrat',sans-serif;}
         </select>
       </div>
       <div class="fg"><label>Status</label>
-        <select id="p-status" class="inp" style="margin-bottom:0;">
+        <select class="fi" id="p-status">
           <option value="draft">Draft (hidden)</option>
           <option value="active" selected>Active</option>
           <option value="upcoming">Upcoming</option>
@@ -232,8 +323,8 @@ h1,h2{font-family:'Montserrat',sans-serif;}
         </select>
       </div>
     </div>
-    <div class="fg"><label>Short Description *</label><textarea id="p-short"></textarea></div>
-    <div class="fg"><label>Full Description (optional)</label><textarea id="p-full"></textarea></div>
+    <div class="fg"><label>Short Description *</label><textarea class="fi" id="p-short"></textarea></div>
+    <div class="fg"><label>Full Description (optional)</label><textarea class="fi" id="p-full"></textarea></div>
     <div class="fg">
       <label>Cover Image</label>
       <input type="hidden" id="p-image">
@@ -241,12 +332,12 @@ h1,h2{font-family:'Montserrat',sans-serif;}
         <p>📷 Tap to upload image (auto-uploads to cloud)</p>
       </div>
       <input type="file" id="p-image-file" accept="image/*" style="display:none" onchange="prevProgramImage(this)">
-      <input class="inp" id="p-image-url" placeholder="Or paste an image URL here..." oninput="document.getElementById('p-image').value=this.value">
+      <input class="fi" id="p-image-url" placeholder="Or paste an image URL here..." oninput="document.getElementById('p-image').value=this.value">
       <div class="up-prev" id="p-image-prev"></div>
     </div>
-    <div class="modal-foot">
-      <button class="cancel" onclick="closeProgramForm()">Cancel</button>
-      <button class="save" onclick="saveProgram()">Save Program</button>
+    <div class="fm-foot">
+      <button class="fc-btn" onclick="closeProgramForm()">Cancel</button>
+      <button class="fs-btn" onclick="saveProgram()">Save Program</button>
     </div>
   </div>
 </div>
