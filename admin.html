@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — NextEra Youth Network</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#14315C;--navy-dk:#0D1B2A;--orange:#F5821F;
+  --bg:#F5F7FA;--card:#FFFFFF;--ink:#0D1B2A;--muted:#5B6472;--line:#E3E7EC;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+h1,h2{font-family:'Montserrat',sans-serif;}
+
+/* Login */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:36px 32px;width:100%;max-width:380px;text-align:center;box-shadow:0 10px 40px rgba(20,49,92,.12);}
+.login-box h1{font-size:1.25rem;font-weight:800;color:var(--navy);margin-bottom:4px;}
+.login-box p{color:var(--muted);font-size:.85rem;margin-bottom:24px;}
+.lbl{display:block;font-size:.76rem;font-weight:600;color:var(--muted);margin-bottom:6px;text-align:left;}
+.inp{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:11px 13px;border-radius:8px;font-size:.9rem;outline:none;margin-bottom:14px;font-family:inherit;}
+.inp:focus{border-color:var(--orange);}
+.err{color:#e04848;font-size:.8rem;margin:-6px 0 12px;display:none;text-align:left;}
+.err.show{display:block;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:8px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;transition:opacity .2s,transform .15s;}
+.btn-pri{background:var(--orange);color:#fff;width:100%;}
+.btn-pri:hover{opacity:.9;}
+.btn-pri:disabled{opacity:.6;cursor:not-allowed;}
+
+/* Shell */
+.shell{display:none;max-width:900px;margin:0 auto;padding:26px 18px 80px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.topbar h1{font-size:1.3rem;font-weight:800;color:var(--navy);}
+.topbar h1 span{color:var(--orange);}
+.logout-btn{background:none;border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;}
+.logout-btn:hover{background:#fff;color:var(--ink);}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:18px;}
+.card h2{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line);}
+.fg{margin-bottom:14px;}
+.fg:last-child{margin-bottom:0;}
+.fg label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:6px;}
+.fg input,.fg textarea{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:10px 13px;border-radius:8px;font-size:.9rem;outline:none;font-family:inherit;transition:border-color .2s;}
+.fg input:focus,.fg textarea:focus{border-color:var(--orange);}
+.fg textarea{min-height:70px;resize:vertical;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.sub-block{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px;}
+.sub-block:last-child{margin-bottom:0;}
+.sub-block-label{font-size:.76rem;font-weight:700;color:var(--orange);margin-bottom:10px;}
+
+.save-bar{position:sticky;bottom:0;background:var(--bg);padding:16px 0;margin-top:6px;}
+.save-btn{width:100%;background:var(--navy);color:#fff;padding:15px;border-radius:10px;font-weight:700;font-size:.95rem;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(20,49,92,.25);}
+.save-btn:hover{opacity:.92;}
+.save-btn:disabled{opacity:.6;cursor:not-allowed;}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy);color:#fff;padding:13px 22px;border-radius:10px;font-size:.87rem;font-weight:600;transition:transform .3s;z-index:1000;box-shadow:0 8px 24px rgba(0,0,0,.2);}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.err{background:#c0392b;}
+
+@media(max-width:560px){.row2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-box">
+    <h1>NYN Admin</h1>
+    <p>Sign in to edit site content</p>
+    <label class="lbl">EMAIL</label>
+    <input class="inp" type="email" id="lu" placeholder="admin@email.com" onkeydown="if(event.key==='Enter')doLogin()">
+    <label class="lbl">PASSWORD</label>
+    <input class="inp" type="password" id="lp" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="err" id="lerr"></div>
+    <button class="btn btn-pri" id="login-btn" onclick="doLogin()">Login</button>
+  </div>
+</div>
+
+<!-- SHELL -->
+<div class="shell" id="shell">
+  <div class="topbar">
+    <h1>NYN <span>Admin</span></h1>
+    <button class="logout-btn" onclick="doLogout()">Logout</button>
+  </div>
+
+  <div class="card">
+    <h2>🏠 Hero Section</h2>
+    <div class="fg"><label>Eyebrow text</label><input id="hero-eyebrow" placeholder="NextEra Youth Network"></div>
+    <div class="fg"><label>Headline</label><input id="hero-headline" placeholder="Where ideas meet impact."></div>
+    <div class="fg"><label>Subtext</label><textarea id="hero-sub" placeholder="We bring young people together..."></textarea></div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Stats Strip</h2>
+    <div class="row2">
+      <div class="sub-block">
+        <div class="sub-block-label">STAT 1</div>
+        <div class="fg"><label>Number</label><input id="stat1-num" placeholder="500+"></div>
+        <div class="fg"><label>Label</label><input id="stat1-label" placeholder="Active Members"></div>
+      </div>
+      <div class="sub-block">
+        <div class="sub-block-label">STAT 2</div>
+        <div class="fg"><label>Number</label><input id="stat2-num" placeholder="30+"></div>
+        <div class="fg"><label>Label</label><input id="stat2-label" placeholder="Programs Run"></div>
+      </div>
+      <div class="sub-block">
+        <div class="sub-block-label">STAT 3</div>
+        <div class="fg"><label>Number</label><input id="stat3-num" placeholder="18"></div>
+        <div class="fg"><label>Label</label><input id="stat3-label" placeholder="Community Projects"></div>
+      </div>
+      <div class="sub-block">
+        <div class="sub-block-label">STAT 4</div>
+        <div class="fg"><label>Number</label><input id="stat4-num" placeholder="12"></div>
+        <div class="fg"><label>Label</label><input id="stat4-label" placeholder="Partner Organizations"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 About / Mission</h2>
+    <div class="fg"><label>Title</label><input id="about-title" placeholder="Young people don't need to wait for permission to lead."></div>
+    <div class="fg"><label>Paragraph 1</label><textarea id="about-text1"></textarea></div>
+    <div class="fg"><label>Paragraph 2</label><textarea id="about-text2"></textarea></div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Programs</h2>
+    <div class="sub-block">
+      <div class="sub-block-label">PROGRAM 1 (featured / large card)</div>
+      <div class="fg"><label>Title</label><input id="prog1-title" placeholder="Leadership Training"></div>
+      <div class="fg"><label>Description</label><textarea id="prog1-desc"></textarea></div>
+    </div>
+    <div class="sub-block">
+      <div class="sub-block-label">PROGRAM 2</div>
+      <div class="fg"><label>Title</label><input id="prog2-title" placeholder="Workshops"></div>
+      <div class="fg"><label>Description</label><textarea id="prog2-desc"></textarea></div>
+    </div>
+    <div class="sub-block">
+      <div class="sub-block-label">PROGRAM 3</div>
+      <div class="fg"><label>Title</label><input id="prog3-title" placeholder="Community Projects"></div>
+      <div class="fg"><label>Description</label><textarea id="prog3-desc"></textarea></div>
+    </div>
+    <div class="sub-block">
+      <div class="sub-block-label">PROGRAM 4</div>
+      <div class="fg"><label>Title</label><input id="prog4-title" placeholder="Networking Events"></div>
+      <div class="fg"><label>Description</label><textarea id="prog4-desc"></textarea></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📣 "Get Involved" Banner</h2>
+    <div class="fg"><label>Title</label><input id="join-title" placeholder="Ready to build something that matters?"></div>
+    <div class="fg"><label>Text</label><textarea id="join-text"></textarea></div>
+  </div>
+
+  <div class="card">
+    <h2>📞 Contact Info</h2>
+    <div class="row2">
+      <div class="fg"><label>Email</label><input id="contact-email" placeholder="hello@nextera-youth.org"></div>
+      <div class="fg"><label>Phone</label><input id="contact-phone" placeholder="+880 1XXX-XXXXXX"></div>
+    </div>
+    <div class="fg"><label>Location</label><input id="contact-location" placeholder="Dhaka, Bangladesh"></div>
+  </div>
+
+  <div class="card">
+    <h2>🔗 Social Links</h2>
+    <div class="fg"><label>Facebook URL</label><input id="social-fb" placeholder="https://facebook.com/..."></div>
+    <div class="fg"><label>Instagram URL</label><input id="social-ig" placeholder="https://instagram.com/..."></div>
+    <div class="fg"><label>LinkedIn URL</label><input id="social-li" placeholder="https://linkedin.com/..."></div>
+  </div>
+
+  <div class="card">
+    <h2>📄 Footer</h2>
+    <div class="fg"><label>Footer description</label><textarea id="footer-desc"></textarea></div>
+  </div>
+
+  <div class="save-bar">
+    <button class="save-btn" id="save-btn" onclick="saveAll()">💾 Save All Changes</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toast-msg"></span></div>
+
+<script type="module" src="firebase-config.js"></script>
+<script src="data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

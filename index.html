@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextEra Youth Network — Where Ideas Meet Impact</title>
+<meta name="description" content="NextEra Youth Network (NYN) — a youth-led organization turning ideas into real-world impact through leadership training, workshops, and community projects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#14315C;--navy-dk:#0D1B2A;--navy-lt:#1B3A6B;
+  --orange:#F5821F;--orange-dk:#D96D0F;--orange-lt:#FFA857;
+  --bg:#FFFFFF;--bg-alt:#F5F7FA;
+  --ink:#0D1B2A;--muted:#5B6472;--line:rgba(13,27,42,.1);
+  --r-sm:6px;--r-md:14px;--r-lg:28px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1420;--bg-alt:#101828;--ink:#EAF0FA;--muted:#93A0B4;--line:rgba(255,255,255,.1);
+    --navy:#1B3A6B;--navy-lt:#274a82;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1420;--bg-alt:#101828;--ink:#EAF0FA;--muted:#93A0B4;--line:rgba(255,255,255,.1);
+  --navy:#1B3A6B;--navy-lt:#274a82;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;
+  background:var(--bg);color:var(--ink);
+  min-height:100vh;overflow-x:hidden;line-height:1.6;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+h1,h2,h3,h4{font-family:'Montserrat',sans-serif;line-height:1.15;letter-spacing:-.01em;}
+
+/* ===== HEADER ===== */
+header{
+  position:sticky;top:0;z-index:500;background:var(--bg);
+  border-bottom:1px solid var(--line);
+}
+.hdr-inner{max-width:1120px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.brand-mark{width:38px;height:38px;flex-shrink:0;}
+.brand-text{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.05rem;color:var(--navy);white-space:nowrap;}
+.brand-text span{color:var(--orange);}
+nav{display:flex;align-items:center;gap:6px;}
+nav a{
+  text-decoration:none;color:var(--muted);font-size:.92rem;font-weight:600;
+  padding:9px 14px;border-radius:var(--r-sm);transition:color .2s,background .2s;white-space:nowrap;
+}
+nav a:hover{color:var(--navy);background:var(--bg-alt);}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 22px;border-radius:var(--r-sm);font-weight:700;font-size:.9rem;
+  border:none;text-decoration:none;transition:transform .15s,box-shadow .2s,opacity .2s;
+}
+.btn-orange{background:var(--orange);color:#fff;box-shadow:0 6px 20px rgba(245,130,31,.32);}
+.btn-orange:hover{transform:translateY(-1px);box-shadow:0 8px 26px rgba(245,130,31,.4);}
+.btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--line);}
+.btn-outline:hover{border-color:var(--navy);}
+.btn-white{background:#fff;color:var(--navy);}
+.btn-white:hover{transform:translateY(-1px);}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:6px;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--navy);border-radius:2px;}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;background:var(--navy-dk);color:#fff;overflow:hidden;
+  padding:80px 0 0;
+}
+.hero-inner{
+  max-width:1120px;margin:0 auto;padding:0 24px 90px;
+  display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;
+}
+.hero-eyebrow{color:var(--orange-lt);font-weight:700;font-size:.85rem;margin-bottom:18px;}
+.hero h1{font-size:clamp(2.1rem,4.6vw,3.5rem);font-weight:900;color:#fff;margin-bottom:22px;}
+.hero h1 em{font-style:normal;color:var(--orange);}
+.hero p{color:#C7D2E3;font-size:1.06rem;max-width:480px;margin-bottom:34px;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-visual{position:relative;height:360px;}
+.hero-visual svg{width:100%;height:100%;}
+
+/* ===== STATS STRIP ===== */
+.stats{background:var(--bg-alt);border-bottom:1px solid var(--line);}
+.stats-inner{max-width:1120px;margin:0 auto;padding:44px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px;text-align:center;}
+.stat-num{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.1rem;color:var(--navy);}
+.stat-num span{color:var(--orange);}
+.stat-label{color:var(--muted);font-size:.82rem;font-weight:600;margin-top:4px;}
+
+/* ===== SECTION GENERIC ===== */
+.section{padding:90px 0;}
+.section-head{max-width:620px;margin-bottom:52px;}
+.section-tag{color:var(--orange-dk);font-weight:700;font-size:.85rem;margin-bottom:10px;}
+.section-head h2{font-size:clamp(1.6rem,3vw,2.3rem);font-weight:800;color:var(--ink);}
+.section-head p{color:var(--muted);margin-top:14px;font-size:1rem;}
+
+/* ===== ABOUT ===== */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+.about-text p{color:var(--muted);margin-bottom:16px;font-size:1rem;}
+.about-text p:last-child{margin-bottom:0;}
+.about-graphic{position:relative;aspect-ratio:1/1;background:var(--bg-alt);border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.about-graphic svg{width:58%;height:58%;}
+
+/* ===== PROGRAMS ===== */
+.prog-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:20px;}
+.prog-card{border-radius:var(--r-md);padding:30px;border:1px solid var(--line);}
+.prog-card.lead{
+  grid-column:span 2;grid-row:span 2;background:var(--navy);color:#fff;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:38px;min-height:340px;
+}
+.prog-card.lead h3{color:#fff;font-size:1.5rem;margin-bottom:12px;}
+.prog-card.lead p{color:#B9C6DC;}
+.prog-card:not(.lead){background:var(--bg-alt);}
+.prog-ico{width:38px;height:38px;margin-bottom:16px;}
+.prog-card h3{font-size:1.06rem;font-weight:700;margin-bottom:8px;color:var(--ink);}
+.prog-card p{color:var(--muted);font-size:.9rem;}
+
+/* ===== JOIN CTA BANNER ===== */
+.join-banner{
+  background:var(--orange);border-radius:var(--r-lg);padding:56px 48px;
+  display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;color:var(--navy-dk);
+}
+.join-banner h2{font-size:clamp(1.5rem,2.6vw,2rem);font-weight:800;max-width:460px;}
+.join-banner p{margin-top:10px;color:rgba(13,27,42,.75);max-width:440px;}
+.join-actions{display:flex;gap:14px;flex-wrap:wrap;flex-shrink:0;}
+
+/* ===== CONTACT ===== */
+.contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;}
+.contact-info h3{font-size:1.2rem;font-weight:700;margin-bottom:18px;color:var(--ink);}
+.contact-row{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start;}
+.contact-ico{width:20px;height:20px;color:var(--orange);flex-shrink:0;margin-top:2px;}
+.contact-row div{color:var(--muted);font-size:.92rem;}
+.contact-row strong{display:block;color:var(--ink);font-size:.92rem;margin-bottom:2px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-grid .full{grid-column:1/-1;}
+.field label{display:block;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:7px;}
+.field input,.field textarea{
+  width:100%;background:var(--bg-alt);border:1px solid var(--line);color:var(--ink);
+  padding:12px 14px;border-radius:var(--r-sm);font-size:.92rem;font-family:inherit;outline:none;
+  transition:border-color .2s;
+}
+.field input:focus,.field textarea:focus{border-color:var(--orange);}
+.field textarea{min-height:110px;resize:vertical;}
+.form-msg{font-size:.86rem;margin-top:14px;display:none;}
+.form-msg.show{display:block;}
+.form-msg.ok{color:#1a9c5a;}
+
+/* ===== FOOTER ===== */
+footer{background:var(--navy-dk);color:#B9C6DC;padding:56px 0 26px;}
+.foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+.foot-brand{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.foot-brand .brand-mark{width:32px;height:32px;}
+.foot-brand span{font-family:'Montserrat',sans-serif;font-weight:800;color:#fff;font-size:1rem;}
+.foot-brand span em{font-style:normal;color:var(--orange-lt);}
+footer p.desc{font-size:.88rem;color:#8FA0BC;max-width:280px;}
+footer h4{color:#fff;font-size:.85rem;font-weight:700;margin-bottom:14px;letter-spacing:.02em;}
+footer nav a{display:block;color:#B9C6DC;text-decoration:none;font-size:.88rem;padding:5px 0;}
+footer nav a:hover{color:var(--orange-lt);}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:.8rem;color:#7E90AC;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:860px){
+  nav{display:none;position:fixed;top:69px;left:0;right:0;bottom:0;background:var(--bg);flex-direction:column;align-items:stretch;padding:20px;gap:2px;overflow-y:auto;z-index:400;}
+  nav.open{display:flex;}
+  nav a{padding:14px 12px;border-bottom:1px solid var(--line);border-radius:0;}
+  .hamburger{display:flex;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-visual{height:220px;order:-1;}
+  .stats-inner{grid-template-columns:repeat(2,1fr);}
+  .about-grid{grid-template-columns:1fr;}
+  .about-graphic{order:-1;max-width:280px;margin:0 auto;}
+  .prog-grid{grid-template-columns:1fr;}
+  .prog-card.lead{grid-column:span 1;grid-row:span 1;min-height:auto;}
+  .contact-grid{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr;gap:28px;}
+  .join-banner{padding:36px 26px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-inner">
+    <a class="brand" href="#top">
+      <svg class="brand-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 78 L8 22 L30 58 L30 22 L38 22 L38 78 L30 78 L8 44 Z" fill="var(--navy)"/>
+        <path d="M62 78 L62 22 L70 22 L70 58 L92 22 L92 78 L84 78 L84 44 Z" fill="var(--navy)"/>
+        <path d="M42 22 L50 40 L58 22 L68 22 L54 48 L54 78 L46 78 L46 48 L32 22 Z" fill="var(--orange)"/>
+        <circle cx="50" cy="16" r="9" fill="var(--orange)"/>
+      </svg>
+      <span class="brand-text">NextEra<span> Youth</span> Network</span>
+    </a>
+    <nav id="nav">
+      <a href="#about">About</a>
+      <a href="#programs">Programs</a>
+      <a href="#join">Get Involved</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <a href="#join" class="btn btn-orange">Join Us</a>
+      <button class="hamburger" id="hbtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow" id="c-hero-eyebrow">NextEra Youth Network</div>
+      <h1 id="c-hero-headline">Where <em>ideas</em> meet impact.</h1>
+      <p id="c-hero-sub">We bring young people together to build leadership skills, run real community projects, and turn early-stage ideas into work that actually changes something.</p>
+      <div class="hero-actions">
+        <a href="#join" class="btn btn-orange">Become a Member</a>
+        <a href="#programs" class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,.3);">See Our Programs</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="200" cy="200" r="180" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1.5"/>
+        <circle cx="200" cy="200" r="130" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1.5"/>
+        <path d="M120 300 L120 130 L280 300 L280 230" fill="none" stroke="var(--orange)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+        <circle cx="280" cy="150" r="20" fill="var(--orange)"/>
+        <path d="M255 175 L280 150 L305 175" fill="none" stroke="var(--orange)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stats-inner">
+    <div><div class="stat-num" id="c-stat1-num">500<span>+</span></div><div class="stat-label" id="c-stat1-label">Active Members</div></div>
+    <div><div class="stat-num" id="c-stat2-num">30<span>+</span></div><div class="stat-label" id="c-stat2-label">Programs Run</div></div>
+    <div><div class="stat-num" id="c-stat3-num">18</div><div class="stat-label" id="c-stat3-label">Community Projects</div></div>
+    <div><div class="stat-num" id="c-stat4-num">12</div><div class="stat-label" id="c-stat4-label">Partner Organizations</div></div>
+  </div>
+</div>
+
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div>
+        <div class="about-graphic">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 170 L20 40 L60 120 L60 40 L78 40 L78 170 L60 170 L20 90 Z" fill="var(--navy)"/>
+            <path d="M130 170 L130 40 L148 40 L148 120 L188 40 L188 170 L170 170 L170 90 Z" fill="var(--navy)"/>
+            <path d="M84 40 L100 76 L116 40 L136 40 L108 96 L108 170 L92 170 L92 96 L64 40 Z" fill="var(--orange)"/>
+            <circle cx="100" cy="30" r="18" fill="var(--orange)"/>
+          </svg>
+        </div>
+      </div>
+      <div class="about-text">
+        <div class="section-tag">Our Mission</div>
+        <h2 style="margin-bottom:20px;" id="c-about-title">Young people don't need to wait for permission to lead.</h2>
+        <p id="c-about-text1">NextEra Youth Network exists because good ideas from young people too often stay ideas — no mentorship, no funding path, no room to try. We close that gap with structured training, hands-on projects, and a network of peers and mentors who back each other's work.</p>
+        <p id="c-about-text2">Every program we run ends with something real: a project shipped, a skill practiced in public, a connection made. That's the standard we hold ourselves to.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="programs" style="background:var(--bg-alt);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag">What We Do</div>
+      <h2>Four ways we turn ideas into action</h2>
+      <p>Every member starts somewhere different — pick the track that fits where you are.</p>
+    </div>
+    <div class="prog-grid">
+      <div class="prog-card lead">
+        <h3 id="c-prog1-title">Leadership Training</h3>
+        <p id="c-prog1-desc">A structured, cohort-based program covering public speaking, project management, and team leadership — built specifically for people running their first initiative.</p>
+      </div>
+      <div class="prog-card">
+        <svg class="prog-ico" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><path d="M12 2v20M2 12h20" stroke-linecap="round"/><circle cx="12" cy="12" r="9"/></svg>
+        <h3 id="c-prog2-title">Workshops</h3>
+        <p id="c-prog2-desc">Weekend sessions on practical skills — design, writing, organizing, and digital tools — taught by working practitioners.</p>
+      </div>
+      <div class="prog-card">
+        <svg class="prog-ico" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <h3 id="c-prog3-title">Community Projects</h3>
+        <p id="c-prog3-desc">Small teams pick a local problem and ship a real solution over 8–10 weeks, with a mentor checking in along the way.</p>
+      </div>
+      <div class="prog-card">
+        <svg class="prog-ico" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="6" r="2.5"/><path d="M2 21v-2a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v2M15 12a4 4 0 0 1 4 4v1" stroke-linecap="round"/></svg>
+        <h3 id="c-prog4-title">Networking Events</h3>
+        <p id="c-prog4-desc">Monthly meetups connecting members with alumni, partner organizations, and potential collaborators.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="join">
+  <div class="wrap">
+    <div class="join-banner">
+      <div>
+        <h2 id="c-join-title">Ready to build something that matters?</h2>
+        <p id="c-join-text">Membership is free. Bring an idea, or come find one worth joining — either way, you'll be working alongside people who follow through.</p>
+      </div>
+      <div class="join-actions">
+        <button class="btn btn-white" onclick="document.getElementById('contact').scrollIntoView()">Become a Member</button>
+        <button class="btn btn-outline" style="border-color:rgba(13,27,42,.3);" onclick="document.getElementById('contact').scrollIntoView()">Volunteer With Us</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact" style="background:var(--bg-alt);padding-bottom:100px;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag">Get In Touch</div>
+      <h2>Questions before you join?</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Reach us directly</h3>
+        <div class="contact-row">
+          <svg class="contact-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M3 6l9 6 9-6M3 6h18v12H3z" stroke-linejoin="round"/></svg>
+          <div><strong>Email</strong><span id="c-contact-email">hello@nextera-youth.org</span></div>
+        </div>
+        <div class="contact-row">
+          <svg class="contact-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.78.6 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.27a2 2 0 0 1 2.11-.45c.85.28 1.73.48 2.63.6A2 2 0 0 1 22 16.92z"/></svg>
+          <div><strong>Phone</strong><span id="c-contact-phone">+880 1XXX-XXXXXX</span></div>
+        </div>
+        <div class="contact-row">
+          <svg class="contact-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div><strong>Location</strong><span id="c-contact-location">Dhaka, Bangladesh</span></div>
+        </div>
+      </div>
+      <div>
+        <form id="cform" onsubmit="return nynSubmit(event)">
+          <div class="form-grid">
+            <div class="field"><label>Full Name</label><input type="text" required placeholder="Your name"></div>
+            <div class="field"><label>Email</label><input type="email" required placeholder="you@email.com"></div>
+            <div class="field full"><label>Message</label><textarea required placeholder="Tell us what you're interested in..."></textarea></div>
+          </div>
+          <button type="submit" class="btn btn-orange" style="margin-top:18px;">Send Message</button>
+          <p class="form-msg ok" id="cform-msg">Thanks — we'll get back to you within a couple of days.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">
+          <svg class="brand-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 78 L8 22 L30 58 L30 22 L38 22 L38 78 L30 78 L8 44 Z" fill="#fff"/>
+            <path d="M62 78 L62 22 L70 22 L70 58 L92 22 L92 78 L84 78 L84 44 Z" fill="#fff"/>
+            <path d="M42 22 L50 40 L58 22 L68 22 L54 48 L54 78 L46 78 L46 48 L32 22 Z" fill="var(--orange)"/>
+            <circle cx="50" cy="16" r="9" fill="var(--orange)"/>
+          </svg>
+          <span>NextEra<em> Youth</em> Network</span>
+        </div>
+        <p class="desc" id="c-footer-desc">A youth-led organization turning ideas into real-world impact through leadership training, workshops, and community projects.</p>
+      </div>
+      <div>
+        <h4>Navigate</h4>
+        <nav>
+          <a href="#about">About</a>
+          <a href="#programs">Programs</a>
+          <a href="#join">Get Involved</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+      <div>
+        <h4>Connect</h4>
+        <nav>
+          <a href="#" id="c-social-fb" target="_blank" rel="noopener">Facebook</a>
+          <a href="#" id="c-social-ig" target="_blank" rel="noopener">Instagram</a>
+          <a href="#" id="c-social-li" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 NextEra Youth Network. All rights reserved.</p>
+      <p>Where Ideas Meet Impact · <a href="admin.html" style="color:#7E90AC;">Admin</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- Firebase (for CMS content loaded from Admin panel) -->
+<script type="module" src="firebase-config.js"></script>
+<script src="data.js"></script>
+
+<script>
+document.getElementById('hbtn').addEventListener('click', () => {
+  document.getElementById('nav').classList.toggle('open');
+});
+document.querySelectorAll('#nav a').forEach(a => a.addEventListener('click', () => {
+  document.getElementById('nav').classList.remove('open');
+}));
+
+function nynSubmit(e){
+  e.preventDefault();
+  document.getElementById('cform-msg').classList.add('show');
+  e.target.reset();
+  return false;
+}
+
+// Pull admin-edited content from Firestore and overwrite the page's
+// hardcoded defaults wherever a value was actually saved. If Firestore
+// has nothing yet (or fails to load), the defaults already in the HTML
+// stay exactly as they are — the page never looks broken or empty.
+document.addEventListener('DOMContentLoaded', async () => {
+  await waitForFirebase();
+  const content = await loadSiteContent();
+  if (!content) return;
+
+  const setText = (id, val) => {
+    if (val === undefined || val === null || val === '') return;
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+  const setHref = (id, val) => {
+    if (!val) return;
+    const el = document.getElementById(id);
+    if (el) el.href = val;
+  };
+
+  setText('c-hero-eyebrow', content.hero?.eyebrow);
+  setText('c-hero-headline', content.hero?.headline);
+  setText('c-hero-sub', content.hero?.sub);
+
+  (content.stats || []).forEach((s, i) => {
+    setText(`c-stat${i + 1}-num`, s?.num);
+    setText(`c-stat${i + 1}-label`, s?.label);
+  });
+
+  setText('c-about-title', content.about?.title);
+  setText('c-about-text1', content.about?.text1);
+  setText('c-about-text2', content.about?.text2);
+
+  (content.programs || []).forEach((p, i) => {
+    setText(`c-prog${i + 1}-title`, p?.title);
+    setText(`c-prog${i + 1}-desc`, p?.desc);
+  });
+
+  setText('c-join-title', content.joinBanner?.title);
+  setText('c-join-text', content.joinBanner?.text);
+
+  setText('c-contact-email', content.contact?.email);
+  setText('c-contact-phone', content.contact?.phone);
+  setText('c-contact-location', content.contact?.location);
+
+  setHref('c-social-fb', content.social?.facebook);
+  setHref('c-social-ig', content.social?.instagram);
+  setHref('c-social-li', content.social?.linkedin);
+
+  setText('c-footer-desc', content.footerDesc);
+});
+</script>
+
+</body>
+</html>
