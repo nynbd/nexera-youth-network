@@ -107,18 +107,35 @@ nav a:hover{color:var(--navy);background:var(--bg-alt);}
 .about-graphic svg{width:58%;height:58%;}
 
 /* ===== PROGRAMS ===== */
-.prog-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:20px;}
-.prog-card{border-radius:var(--r-md);padding:30px;border:1px solid var(--line);}
-.prog-card.lead{
-  grid-column:span 2;grid-row:span 2;background:var(--navy);color:#fff;
-  display:flex;flex-direction:column;justify-content:flex-end;padding:38px;min-height:340px;
+.prog-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px;}
+.prog-card{
+  border-radius:var(--r-lg);border:1px solid var(--line);background:var(--bg);
+  overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;
 }
-.prog-card.lead h3{color:#fff;font-size:1.5rem;margin-bottom:12px;}
-.prog-card.lead p{color:#B9C6DC;}
-.prog-card:not(.lead){background:var(--bg-alt);}
-.prog-ico{width:38px;height:38px;margin-bottom:16px;}
-.prog-card h3{font-size:1.06rem;font-weight:700;margin-bottom:8px;color:var(--ink);}
-.prog-card p{color:var(--muted);font-size:.9rem;}
+.prog-card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(13,27,42,.12);}
+.prog-img-wrap{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-dk) 100%);overflow:hidden;}
+.prog-img-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;}
+.prog-ico{width:44px;height:44px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);stroke:#fff;opacity:.85;}
+.prog-badge{
+  position:absolute;top:14px;left:14px;z-index:2;background:var(--navy);color:#fff;
+  font-size:.72rem;font-weight:700;letter-spacing:.03em;padding:5px 12px;border-radius:99px;
+  text-transform:uppercase;
+}
+.prog-badge.open{background:#1E8E5A;}
+.prog-body{padding:24px 24px 26px;display:flex;flex-direction:column;flex:1;}
+.prog-card h3{font-size:1.12rem;font-weight:700;margin-bottom:10px;color:var(--ink);}
+.prog-card p.prog-desc{color:var(--muted);font-size:.9rem;margin-bottom:16px;}
+.prog-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.prog-meta span{
+  display:inline-flex;align-items:center;gap:5px;background:var(--bg-alt);border:1px solid var(--line);
+  color:var(--muted);font-size:.76rem;font-weight:600;padding:5px 10px;border-radius:99px;
+}
+.prog-readmore{
+  margin-top:auto;color:var(--orange-dk);font-weight:700;font-size:.9rem;text-decoration:none;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.prog-readmore:hover{color:var(--orange);}
+@media(max-width:720px){.prog-grid{grid-template-columns:1fr;}}
 
 /* ===== JOIN CTA BANNER ===== */
 .join-banner{
@@ -272,24 +289,73 @@ footer nav a:hover{color:var(--orange-lt);}
       <p>Every member starts somewhere different — pick the track that fits where you are.</p>
     </div>
     <div class="prog-grid">
-      <div class="prog-card lead">
-        <h3 id="c-prog1-title">Leadership Training</h3>
-        <p id="c-prog1-desc">A structured, cohort-based program covering public speaking, project management, and team leadership — built specifically for people running their first initiative.</p>
+      <div class="prog-card">
+        <div class="prog-img-wrap">
+          <img id="c-prog1-img" src="" alt="" style="display:none;">
+          <svg class="prog-ico" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2v20M2 12h20" stroke-linecap="round"/><circle cx="12" cy="12" r="9"/></svg>
+          <span class="prog-badge open" id="c-prog1-badge">Ongoing</span>
+        </div>
+        <div class="prog-body">
+          <h3 id="c-prog1-title">Leadership Training</h3>
+          <div class="prog-meta">
+            <span>📅 <span id="c-prog1-date">Year-round</span></span>
+            <span>🏷️ <span id="c-prog1-tag">Leadership</span></span>
+            <span>📍 <span id="c-prog1-location">In-person</span></span>
+          </div>
+          <p class="prog-desc" id="c-prog1-desc">A structured, cohort-based program covering public speaking, project management, and team leadership — built specifically for people running their first initiative.</p>
+          <a href="#join" class="prog-readmore" id="c-prog1-link">Read More →</a>
+        </div>
       </div>
       <div class="prog-card">
-        <svg class="prog-ico" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><path d="M12 2v20M2 12h20" stroke-linecap="round"/><circle cx="12" cy="12" r="9"/></svg>
-        <h3 id="c-prog2-title">Workshops</h3>
-        <p id="c-prog2-desc">Weekend sessions on practical skills — design, writing, organizing, and digital tools — taught by working practitioners.</p>
+        <div class="prog-img-wrap">
+          <img id="c-prog2-img" src="" alt="" style="display:none;">
+          <svg class="prog-ico" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <span class="prog-badge open" id="c-prog2-badge">Open</span>
+        </div>
+        <div class="prog-body">
+          <h3 id="c-prog2-title">Workshops</h3>
+          <div class="prog-meta">
+            <span>📅 <span id="c-prog2-date">Monthly</span></span>
+            <span>🏷️ <span id="c-prog2-tag">Skills</span></span>
+            <span>📍 <span id="c-prog2-location">Online</span></span>
+          </div>
+          <p class="prog-desc" id="c-prog2-desc">Weekend sessions on practical skills — design, writing, organizing, and digital tools — taught by working practitioners.</p>
+          <a href="#join" class="prog-readmore" id="c-prog2-link">Read More →</a>
+        </div>
       </div>
       <div class="prog-card">
-        <svg class="prog-ico" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        <h3 id="c-prog3-title">Community Projects</h3>
-        <p id="c-prog3-desc">Small teams pick a local problem and ship a real solution over 8–10 weeks, with a mentor checking in along the way.</p>
+        <div class="prog-img-wrap">
+          <img id="c-prog3-img" src="" alt="" style="display:none;">
+          <svg class="prog-ico" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="6" r="2.5"/><path d="M2 21v-2a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v2M15 12a4 4 0 0 1 4 4v1" stroke-linecap="round"/></svg>
+          <span class="prog-badge" id="c-prog3-badge">Upcoming</span>
+        </div>
+        <div class="prog-body">
+          <h3 id="c-prog3-title">Community Projects</h3>
+          <div class="prog-meta">
+            <span>📅 <span id="c-prog3-date">8–10 weeks</span></span>
+            <span>🏷️ <span id="c-prog3-tag">Community</span></span>
+            <span>📍 <span id="c-prog3-location">Local</span></span>
+          </div>
+          <p class="prog-desc" id="c-prog3-desc">Small teams pick a local problem and ship a real solution over 8–10 weeks, with a mentor checking in along the way.</p>
+          <a href="#join" class="prog-readmore" id="c-prog3-link">Read More →</a>
+        </div>
       </div>
       <div class="prog-card">
-        <svg class="prog-ico" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="6" r="2.5"/><path d="M2 21v-2a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v2M15 12a4 4 0 0 1 4 4v1" stroke-linecap="round"/></svg>
-        <h3 id="c-prog4-title">Networking Events</h3>
-        <p id="c-prog4-desc">Monthly meetups connecting members with alumni, partner organizations, and potential collaborators.</p>
+        <div class="prog-img-wrap">
+          <img id="c-prog4-img" src="" alt="" style="display:none;">
+          <svg class="prog-ico" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M8 3a3 3 0 100 6 3 3 0 000-6z"/><path d="M17 3.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"/><path d="M2 21v-2a5 5 0 015-5h2a5 5 0 015 5v2M15 12a4 4 0 014 4v1" stroke-linecap="round"/></svg>
+          <span class="prog-badge" id="c-prog4-badge">Monthly</span>
+        </div>
+        <div class="prog-body">
+          <h3 id="c-prog4-title">Networking Events</h3>
+          <div class="prog-meta">
+            <span>📅 <span id="c-prog4-date">Every month</span></span>
+            <span>🏷️ <span id="c-prog4-tag">Networking</span></span>
+            <span>📍 <span id="c-prog4-location">Hybrid</span></span>
+          </div>
+          <p class="prog-desc" id="c-prog4-desc">Monthly meetups connecting members with alumni, partner organizations, and potential collaborators.</p>
+          <a href="#join" class="prog-readmore" id="c-prog4-link">Read More →</a>
+        </div>
       </div>
     </div>
   </div>
@@ -425,6 +491,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const el = document.getElementById(id);
     if (el) el.href = val;
   };
+  const setImg = (id, val) => {
+    if (!val) return;
+    const el = document.getElementById(id);
+    if (el) { el.src = val; el.style.display = 'block'; }
+  };
 
   setText('c-hero-eyebrow', content.hero?.eyebrow);
   setText('c-hero-headline', content.hero?.headline);
@@ -442,6 +513,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   (content.programs || []).forEach((p, i) => {
     setText(`c-prog${i + 1}-title`, p?.title);
     setText(`c-prog${i + 1}-desc`, p?.desc);
+    setText(`c-prog${i + 1}-badge`, p?.badge);
+    setText(`c-prog${i + 1}-date`, p?.date);
+    setText(`c-prog${i + 1}-tag`, p?.tag);
+    setText(`c-prog${i + 1}-location`, p?.location);
+    setHref(`c-prog${i + 1}-link`, p?.link);
+    setImg(`c-prog${i + 1}-img`, p?.image);
   });
 
   setText('c-join-title', content.joinBanner?.title);

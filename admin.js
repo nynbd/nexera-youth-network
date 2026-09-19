@@ -85,6 +85,12 @@ async function populateForm() {
   (content.programs || []).forEach((p, i) => {
     setVal(`prog${i + 1}-title`, p?.title);
     setVal(`prog${i + 1}-desc`, p?.desc);
+    setVal(`prog${i + 1}-img`, p?.image);
+    setVal(`prog${i + 1}-badge`, p?.badge);
+    setVal(`prog${i + 1}-date`, p?.date);
+    setVal(`prog${i + 1}-tag`, p?.tag);
+    setVal(`prog${i + 1}-location`, p?.location);
+    setVal(`prog${i + 1}-link`, p?.link);
   });
 
   setVal('join-title', content.joinBanner?.title);
@@ -117,7 +123,16 @@ async function saveAll() {
       text1: val('about-text1'),
       text2: val('about-text2')
     },
-    programs: [1, 2, 3, 4].map(i => ({ title: val(`prog${i}-title`), desc: val(`prog${i}-desc`) })),
+    programs: [1, 2, 3, 4].map(i => ({
+      title: val(`prog${i}-title`),
+      desc: val(`prog${i}-desc`),
+      image: val(`prog${i}-img`),
+      badge: val(`prog${i}-badge`),
+      date: val(`prog${i}-date`),
+      tag: val(`prog${i}-tag`),
+      location: val(`prog${i}-location`),
+      link: val(`prog${i}-link`)
+    })),
     joinBanner: {
       title: val('join-title'),
       text: val('join-text')
