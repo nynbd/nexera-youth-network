@@ -107,14 +107,33 @@ nav a:hover{color:var(--navy);background:var(--bg-alt);}
 .about-graphic svg{width:58%;height:58%;}
 
 /* ===== PROGRAMS ===== */
-.prog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px;}
-.prog-card{border-radius:var(--r-md);border:1px solid var(--line);background:var(--bg);overflow:hidden;display:flex;flex-direction:column;}
-.prog-img{width:100%;aspect-ratio:16/10;object-fit:cover;background:var(--bg-alt);}
-.prog-img-ph{width:100%;aspect-ratio:16/10;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:2rem;}
-.prog-body{padding:20px;flex:1;display:flex;flex-direction:column;}
-.prog-cat{display:inline-block;font-size:.68rem;font-weight:700;color:var(--orange-dk);background:rgba(245,130,31,.1);padding:3px 10px;border-radius:20px;margin-bottom:10px;width:fit-content;}
-.prog-card h3{font-size:1.05rem;font-weight:700;margin-bottom:8px;color:var(--ink);}
-.prog-card p{color:var(--muted);font-size:.88rem;flex:1;}
+.prog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px;}
+.prog-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;cursor:pointer;position:relative;transition:transform .2s,box-shadow .2s,border-color .2s;display:flex;flex-direction:column;}
+.prog-card:hover{transform:translateY(-4px);box-shadow:0 10px 32px rgba(20,49,92,.15);border-color:var(--navy-lt);}
+.prog-img{width:100%;height:170px;object-fit:cover;display:block;background:var(--bg-alt);}
+.prog-img-ph{width:100%;height:170px;background:linear-gradient(135deg,var(--navy),var(--navy-lt));display:flex;align-items:center;justify-content:center;font-size:2.6rem;}
+.prog-badge{position:absolute;top:10px;left:10px;font-size:.66rem;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:5px;text-transform:uppercase;color:#fff;backdrop-filter:blur(3px);}
+.prog-badge.active{background:rgba(34,150,94,.9);}
+.prog-badge.upcoming{background:rgba(245,130,31,.92);}
+.prog-badge.closed{background:rgba(91,100,114,.9);}
+.prog-body{padding:18px;flex:1;display:flex;flex-direction:column;}
+.prog-cat{display:inline-flex;align-items:center;gap:4px;background:rgba(20,49,92,.06);border:1px solid var(--line);padding:3px 9px;border-radius:5px;font-size:.7rem;font-weight:600;color:var(--navy);margin-bottom:10px;width:fit-content;}
+.prog-card h3{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--ink);line-height:1.3;}
+.prog-card p{color:var(--muted);font-size:.85rem;line-height:1.6;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.prog-more{display:inline-flex;align-items:center;gap:5px;margin-top:12px;color:var(--orange-dk);font-size:.8rem;font-weight:700;background:none;border:none;cursor:pointer;padding:0;transition:gap .2s;}
+.prog-more::after{content:"→";}
+.prog-card:hover .prog-more{gap:9px;}
+
+/* Program detail modal */
+.pg-modal-ov{position:fixed;inset:0;z-index:5000;background:rgba(13,27,42,.6);display:flex;align-items:flex-start;justify-content:center;padding:30px 16px;opacity:0;pointer-events:none;transition:opacity .2s;overflow-y:auto;}
+.pg-modal-ov.open{opacity:1;pointer-events:all;}
+.pg-modal{background:var(--bg);border-radius:var(--r-lg);max-width:560px;width:100%;margin:auto;overflow:hidden;position:relative;}
+.pg-modal-close{position:absolute;top:12px;right:12px;background:rgba(13,27,42,.55);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;z-index:2;}
+.pg-modal-img{width:100%;height:220px;object-fit:cover;display:block;background:var(--bg-alt);}
+.pg-modal-img-ph{width:100%;height:220px;background:linear-gradient(135deg,var(--navy),var(--navy-lt));display:flex;align-items:center;justify-content:center;font-size:3rem;}
+.pg-modal-body{padding:26px;}
+.pg-modal-body h2{font-family:'Montserrat',sans-serif;font-size:1.3rem;font-weight:800;color:var(--ink);margin:10px 0 14px;}
+.pg-modal-body p{color:var(--muted);font-size:.94rem;line-height:1.7;}
 
 /* ===== JOIN CTA BANNER ===== */
 .join-banner{
@@ -416,6 +435,19 @@ body.loading{overflow:hidden;}
   </div>
 </footer>
 
+<!-- PROGRAM DETAIL MODAL -->
+<div class="pg-modal-ov" id="pg-modal-ov" onclick="if(event.target===this)closeProgramModal()">
+  <div class="pg-modal">
+    <button class="pg-modal-close" onclick="closeProgramModal()">✕</button>
+    <div id="pg-modal-media"></div>
+    <div class="pg-modal-body">
+      <span class="prog-cat" id="pg-modal-cat"></span>
+      <h2 id="pg-modal-title"></h2>
+      <p id="pg-modal-desc"></p>
+    </div>
+  </div>
+</div>
+
 <script>
 // Splash screen: stays until BOTH Firestore loads (site text + programs) finish,
 // but never shorter than 1.6s (smooth) and never longer than 7s (safety net).
@@ -511,30 +543,55 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Programs are a separate, unlimited-count collection (managed from
-// Admin → Manage Programs), rendered into a card grid here.
+// Admin → Manage Programs), rendered into a card grid here, TVBD-style:
+// image + status badge, category chip, title, clamped description, and
+// a "Read More" link that opens the full detail in a modal.
+let loadedPrograms = [];
+
 document.addEventListener('DOMContentLoaded', async () => {
   await waitForFirebase();
   const all = await loadPrograms();
-  const programs = all.filter(p => p.status !== 'draft');
+  loadedPrograms = all.filter(p => p.status !== 'draft');
   const grid = document.getElementById('prog-grid');
 
-  if (!programs.length) {
+  if (!loadedPrograms.length) {
     grid.innerHTML = `<div class="prog-card"><div class="prog-body"><p>Programs will appear here soon — check back!</p></div></div>`;
     window.nynMark && window.nynMark();
     return;
   }
 
-  grid.innerHTML = programs.map(p => `
-    <div class="prog-card">
+  grid.innerHTML = loadedPrograms.map((p, i) => `
+    <div class="prog-card" onclick="openProgramModal(${i})">
       ${p.image ? `<img class="prog-img" src="${p.image}" alt="${p.title}">` : `<div class="prog-img-ph">📋</div>`}
+      <span class="prog-badge ${p.status || 'active'}">${p.status || 'active'}</span>
       <div class="prog-body">
-        ${p.category ? `<span class="prog-cat">${p.category}</span>` : ''}
+        ${p.category ? `<span class="prog-cat">🏷️ ${p.category}</span>` : ''}
         <h3>${p.title}</h3>
         <p>${p.short || ''}</p>
+        <button class="prog-more">Read More</button>
       </div>
     </div>`).join('');
   window.nynMark && window.nynMark();
 });
+
+function openProgramModal(i) {
+  const p = loadedPrograms[i];
+  if (!p) return;
+  document.getElementById('pg-modal-media').innerHTML = p.image
+    ? `<img class="pg-modal-img" src="${p.image}" alt="${p.title}">`
+    : `<div class="pg-modal-img-ph">📋</div>`;
+  document.getElementById('pg-modal-cat').textContent = p.category ? `🏷️ ${p.category}` : '';
+  document.getElementById('pg-modal-cat').style.display = p.category ? 'inline-flex' : 'none';
+  document.getElementById('pg-modal-title').textContent = p.title;
+  document.getElementById('pg-modal-desc').textContent = p.full || p.short || '';
+  document.getElementById('pg-modal-ov').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProgramModal() {
+  document.getElementById('pg-modal-ov').classList.remove('open');
+  document.body.style.overflow = '';
+}
 </script>
 
 </body>
