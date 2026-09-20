@@ -56,6 +56,7 @@ function initAuthListener() {
       shell.style.display = 'flex';
       populateForm();
       renderProgramsTable();
+      renderParticipantsTable();
     } else {
       login.style.display = 'flex';
       shell.style.display = 'none';
@@ -93,6 +94,7 @@ function goSec(btn) {
     'dash': 'Dashboard',
     'home-ed': 'Home Page Editor',
     'prog-adm': 'Manage Programs',
+    'part-adm': 'Participants',
     'site-adm': 'Site Info'
   };
   document.getElementById('adm-ptitle').textContent = titles[secId] || secId;
@@ -184,6 +186,7 @@ async function saveSiteInfo() {
 
 /*===== PROGRAMS (list — add/edit/delete) =====*/
 let cachedPrograms = [];
+let cachedParticipants = [];
 
 async function renderProgramsTable() {
   const body = document.getElementById('ptbl-body');
@@ -219,11 +222,13 @@ function updateDashboardStats() {
   const active = cachedPrograms.filter(p => p.status === 'active').length;
   const upcoming = cachedPrograms.filter(p => p.status === 'upcoming').length;
   const draft = cachedPrograms.filter(p => p.status === 'draft').length;
+  const newParts = cachedParticipants.filter(p => p.status === 'new').length;
   const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
   setText('db-prog-total', total);
   setText('db-prog-active', active);
   setText('db-prog-upcoming', upcoming);
   setText('db-prog-draft', draft);
+  setText('db-part-new', newParts);
 }
 
 function openProgramForm() {
@@ -345,6 +350,76 @@ async function deleteProgramAction(id) {
     toast("Program deleted.");
     cachedPrograms = cachedPrograms.filter(p => p.id !== id);
     renderProgramsTableFromCache();
+  } else {
+    toast("Delete failed!", true);
+  }
+}
+
+/*===== PARTICIPANTS ("Join This Program" submissions) =====*/
+async function renderParticipantsTable() {
+  const body = document.getElementById('partbl-body');
+  if (!body) return;
+  body.innerHTML = `<tr class="empty-row"><td colspan="6">Loading...</td></tr>`;
+  cachedParticipants = await loadParticipants();
+  updateDashboardStats();
+
+  if (!cachedParticipants.length) {
+    body.innerHTML = `<tr class="empty-row"><td colspan="6">No one has joined a program yet.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = cachedParticipants.map(p => {
+    const dateStr = p.submittedAt ? new Date(p.submittedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+    return `
+    <tr>
+      <td><strong>${p.name}</strong></td>
+      <td>${p.programTitle || '—'}</td>
+      <td style="font-size:.8rem;color:var(--muted);">${p.email}${p.phone ? '<br>' + p.phone : ''}</td>
+      <td><span class="bs ${p.status || 'new'}">${p.status || 'new'}</span></td>
+      <td style="font-size:.8rem;color:var(--muted);white-space:nowrap;">${dateStr}</td>
+      <td class="tbl-acts">
+        <button class="e-btn" onclick="openPartForm('${p.id}')">View</button>
+        <button class="d-btn" onclick="deletePartAction('${p.id}')">Delete</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openPartForm(id) {
+  const p = cachedParticipants.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('part-id').value = p.id;
+  document.getElementById('part-name').value = p.name || '';
+  document.getElementById('part-email').value = p.email || '';
+  document.getElementById('part-phone').value = p.phone || '';
+  document.getElementById('part-program').value = p.programTitle || '';
+  document.getElementById('part-message').value = p.message || '';
+  document.getElementById('part-status').value = p.status || 'new';
+  document.getElementById('partmodal').classList.add('open');
+}
+
+function closePartForm() {
+  document.getElementById('partmodal').classList.remove('open');
+}
+
+async function savePartStatus() {
+  const id = document.getElementById('part-id').value;
+  const status = document.getElementById('part-status').value;
+  const result = await updateParticipant(id, { status });
+  if (result.success) {
+    toast("Status updated!");
+    closePartForm();
+    renderParticipantsTable();
+  } else {
+    toast(result.error || "Update failed!", true);
+  }
+}
+
+async function deletePartAction(id) {
+  if (!confirm("Delete this participant entry?")) return;
+  if (await deleteParticipant(id)) {
+    toast("Deleted.");
+    renderParticipantsTable();
   } else {
     toast("Delete failed!", true);
   }

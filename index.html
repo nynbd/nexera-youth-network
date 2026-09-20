@@ -134,6 +134,26 @@ nav a:hover{color:var(--navy);background:var(--bg-alt);}
 .pg-modal-body{padding:26px;}
 .pg-modal-body h2{font-family:'Montserrat',sans-serif;font-size:1.3rem;font-weight:800;color:var(--ink);margin:10px 0 14px;}
 .pg-modal-body p{color:var(--muted);font-size:.94rem;line-height:1.7;}
+.pg-join-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,var(--orange),var(--orange-dk));color:#fff;padding:13px 20px;border-radius:9px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;margin-top:20px;transition:opacity .2s;}
+.pg-join-btn:hover{opacity:.9;}
+
+/* Join This Program form modal */
+.jf-modal-ov{position:fixed;inset:0;z-index:5100;background:rgba(13,27,42,.6);display:flex;align-items:flex-start;justify-content:center;padding:30px 16px;opacity:0;pointer-events:none;transition:opacity .2s;overflow-y:auto;}
+.jf-modal-ov.open{opacity:1;pointer-events:all;}
+.jf-modal{background:var(--bg);border-radius:var(--r-lg);max-width:440px;width:100%;margin:auto;padding:28px;}
+.jf-modal h3{font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:800;color:var(--ink);margin-bottom:4px;}
+.jf-modal .jf-sub{color:var(--muted);font-size:.85rem;margin-bottom:20px;}
+.jf-fg{margin-bottom:14px;}
+.jf-fg label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:6px;}
+.jf-fg input,.jf-fg textarea{width:100%;background:var(--bg-alt);border:1px solid var(--line);color:var(--ink);padding:11px 14px;border-radius:8px;font-size:.9rem;outline:none;font-family:inherit;transition:border-color .2s;}
+.jf-fg input:focus,.jf-fg textarea:focus{border-color:var(--orange);}
+.jf-fg textarea{min-height:70px;resize:vertical;}
+.jf-close{float:right;background:none;border:none;font-size:1.1rem;color:var(--muted);cursor:pointer;}
+.jf-success{text-align:center;padding:10px 0;}
+.jf-success .ri{font-size:3rem;margin-bottom:14px;}
+.jf-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy-dk);color:#fff;padding:13px 22px;border-radius:10px;font-size:.87rem;font-weight:600;transition:transform .3s;z-index:9000;box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.jf-toast.show{transform:translateX(-50%) translateY(0);}
+.jf-toast.err{background:#c0392b;}
 
 /* ===== JOIN CTA BANNER ===== */
 .join-banner{
@@ -444,6 +464,28 @@ body.loading{overflow:hidden;}
       <span class="prog-cat" id="pg-modal-cat"></span>
       <h2 id="pg-modal-title"></h2>
       <p id="pg-modal-desc"></p>
+      <button class="pg-join-btn" id="pg-modal-join-btn" onclick="openJoinForm()">🙋 Join This Program</button>
+    </div>
+  </div>
+</div>
+
+<!-- JOIN THIS PROGRAM FORM MODAL -->
+<div class="jf-modal-ov" id="jf-modal-ov" onclick="if(event.target===this)closeJoinForm()">
+  <div class="jf-modal">
+    <button class="jf-close" onclick="closeJoinForm()">✕</button>
+    <div id="jf-form-view">
+      <h3>Join <span id="jf-program-name"></span></h3>
+      <p class="jf-sub">Fill this in and we'll get back to you with next steps.</p>
+      <div class="jf-fg"><label>Full Name *</label><input id="jf-name" placeholder="Your name"></div>
+      <div class="jf-fg"><label>Email *</label><input id="jf-email" type="email" placeholder="you@email.com"></div>
+      <div class="jf-fg"><label>Phone</label><input id="jf-phone" placeholder="+880 1XXX-XXXXXX"></div>
+      <div class="jf-fg"><label>Message (optional)</label><textarea id="jf-message" placeholder="Anything you'd like us to know..."></textarea></div>
+      <button class="pg-join-btn" onclick="submitJoinForm()">Submit</button>
+    </div>
+    <div id="jf-success-view" class="jf-success" style="display:none;">
+      <div class="ri">✅</div>
+      <h3 style="margin-bottom:8px;">You're in!</h3>
+      <p style="color:var(--muted);font-size:.9rem;">Thanks for signing up — we'll reach out soon.</p>
     </div>
   </div>
 </div>
@@ -474,6 +516,9 @@ body.loading{overflow:hidden;}
   setTimeout(finish,7000);
 })();
 </script>
+
+<!-- TOAST -->
+<div class="jf-toast" id="toast"><span id="t-msg"></span></div>
 
 <!-- Firebase (for CMS content loaded from Admin panel) -->
 <script type="module" src="firebase-config.js"></script>
@@ -577,6 +622,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 function openProgramModal(i) {
   const p = loadedPrograms[i];
   if (!p) return;
+  currentModalProgram = p;
   document.getElementById('pg-modal-media').innerHTML = p.image
     ? `<img class="pg-modal-img" src="${p.image}" alt="${p.title}">`
     : `<div class="pg-modal-img-ph">📋</div>`;
@@ -591,6 +637,61 @@ function openProgramModal(i) {
 function closeProgramModal() {
   document.getElementById('pg-modal-ov').classList.remove('open');
   document.body.style.overflow = '';
+}
+
+/*===== JOIN THIS PROGRAM =====*/
+let currentModalProgram = null;
+
+function toast(msg, isErr) {
+  const t = document.getElementById('toast');
+  if (!t) return alert(msg);
+  document.getElementById('t-msg').textContent = msg;
+  t.classList.toggle('err', !!isErr);
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function openJoinForm() {
+  if (!currentModalProgram) return;
+  document.getElementById('jf-program-name').textContent = currentModalProgram.title;
+  document.getElementById('jf-name').value = '';
+  document.getElementById('jf-email').value = '';
+  document.getElementById('jf-phone').value = '';
+  document.getElementById('jf-message').value = '';
+  document.getElementById('jf-form-view').style.display = 'block';
+  document.getElementById('jf-success-view').style.display = 'none';
+  document.getElementById('jf-modal-ov').classList.add('open');
+}
+
+function closeJoinForm() {
+  document.getElementById('jf-modal-ov').classList.remove('open');
+}
+
+async function submitJoinForm() {
+  const name = document.getElementById('jf-name').value.trim();
+  const email = document.getElementById('jf-email').value.trim();
+  const phone = document.getElementById('jf-phone').value.trim();
+  const message = document.getElementById('jf-message').value.trim();
+
+  if (!name || !email) return toast("Name and email are required!", true);
+
+  const btn = document.querySelector('#jf-form-view .pg-join-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
+
+  const result = await addParticipant({
+    programId: currentModalProgram.id,
+    programTitle: currentModalProgram.title,
+    name, email, phone, message
+  });
+
+  if (btn) { btn.disabled = false; btn.textContent = 'Submit'; }
+
+  if (result.success) {
+    document.getElementById('jf-form-view').style.display = 'none';
+    document.getElementById('jf-success-view').style.display = 'block';
+  } else {
+    toast(result.error || "Something went wrong, please try again.", true);
+  }
 }
 </script>
 

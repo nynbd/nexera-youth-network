@@ -115,3 +115,58 @@ async function uploadToImgBB(file) {
     return { success: false, error: err.message };
   }
 }
+
+/*===== PARTICIPANTS ("Join This Program" submissions) =====*/
+async function loadParticipants() {
+  await waitForFirebase();
+  const { collection, getDocs, query, orderBy } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    const snap = await getDocs(query(collection(db, "participants"), orderBy("submittedAt", "desc")));
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch (err) {
+    console.error("Load participants error:", err);
+    return [];
+  }
+}
+
+async function addParticipant(entry) {
+  await waitForFirebase();
+  const { collection, addDoc } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    entry.submittedAt = Date.now();
+    entry.status = entry.status || 'new';
+    const ref = await addDoc(collection(db, "participants"), entry);
+    return { success: true, id: ref.id };
+  } catch (err) {
+    console.error("Add participant error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+async function updateParticipant(id, changes) {
+  await waitForFirebase();
+  const { doc, updateDoc } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    await updateDoc(doc(db, "participants", id), changes);
+    return { success: true };
+  } catch (err) {
+    console.error("Update participant error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+async function deleteParticipant(id) {
+  await waitForFirebase();
+  const { doc, deleteDoc } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    await deleteDoc(doc(db, "participants", id));
+    return true;
+  } catch (err) {
+    console.error("Delete participant error:", err);
+    return false;
+  }
+}

@@ -105,6 +105,10 @@ textarea.fi{min-height:70px;resize:vertical;}
 .bs.active{background:rgba(34,197,94,.14);color:#1a9c5a;}
 .bs.upcoming{background:rgba(245,130,31,.14);color:var(--orange-dk);}
 .bs.closed,.bs.draft{background:rgba(107,114,128,.14);color:#6b7280;}
+.bs.new{background:rgba(37,99,235,.14);color:#2563eb;}
+.bs.contacted{background:rgba(245,130,31,.14);color:var(--orange-dk);}
+.bs.approved{background:rgba(34,197,94,.14);color:#1a9c5a;}
+.bs.rejected{background:rgba(192,57,43,.14);color:#c0392b;}
 .empty-row td{text-align:center;color:var(--muted);padding:32px!important;}
 
 /* Modal */
@@ -173,6 +177,7 @@ textarea.fi{min-height:70px;resize:vertical;}
         <div class="adm-ns">Content</div>
         <button class="adm-nb" data-sec="home-ed" onclick="goSec(this)"><span class="ico">🏠</span>Home Page</button>
         <button class="adm-nb" data-sec="prog-adm" onclick="goSec(this)"><span class="ico">📋</span>Programs</button>
+        <button class="adm-nb" data-sec="part-adm" onclick="goSec(this)"><span class="ico">🙋</span>Participants</button>
 
         <div class="adm-ns">Settings</div>
         <button class="adm-nb" data-sec="site-adm" onclick="goSec(this)"><span class="ico">⚙️</span>Site Info</button>
@@ -198,6 +203,7 @@ textarea.fi{min-height:70px;resize:vertical;}
           <div class="stat-card"><div class="sl">Active</div><div class="sv" id="db-prog-active">—</div></div>
           <div class="stat-card"><div class="sl">Upcoming</div><div class="sv" id="db-prog-upcoming">—</div></div>
           <div class="stat-card"><div class="sl">Draft</div><div class="sv" id="db-prog-draft">—</div></div>
+          <div class="stat-card"><div class="sl">New Participants</div><div class="sv" id="db-part-new">—</div></div>
         </div>
         <div class="card">
           <h2>Quick Links</h2>
@@ -265,6 +271,16 @@ textarea.fi{min-height:70px;resize:vertical;}
           <table class="tbl">
             <thead><tr><th>Image</th><th>Title</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody id="ptbl-body"><tr class="empty-row"><td colspan="5">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PARTICIPANTS -->
+      <div class="adm-sec" id="part-adm">
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Name</th><th>Program</th><th>Contact</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="partbl-body"><tr class="empty-row"><td colspan="6">Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -338,6 +354,36 @@ textarea.fi{min-height:70px;resize:vertical;}
     <div class="fm-foot">
       <button class="fc-btn" onclick="closeProgramForm()">Cancel</button>
       <button class="fs-btn" onclick="saveProgram()">Save Program</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PARTICIPANT MODAL -->
+<div class="fm-ov" id="partmodal" onclick="if(event.target===this)closePartForm()">
+  <div class="fm">
+    <div class="fm-head">
+      <h3>Participant Details</h3>
+      <button onclick="closePartForm()">✕</button>
+    </div>
+    <input type="hidden" id="part-id">
+    <div class="fg"><label>Name</label><input class="fi" id="part-name" disabled></div>
+    <div class="row2">
+      <div class="fg"><label>Email</label><input class="fi" id="part-email" disabled></div>
+      <div class="fg"><label>Phone</label><input class="fi" id="part-phone" disabled></div>
+    </div>
+    <div class="fg"><label>Program</label><input class="fi" id="part-program" disabled></div>
+    <div class="fg"><label>Message</label><textarea class="fi" id="part-message" disabled></textarea></div>
+    <div class="fg"><label>Status</label>
+      <select class="fi" id="part-status">
+        <option value="new">New</option>
+        <option value="contacted">Contacted</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+    <div class="fm-foot">
+      <button class="fc-btn" onclick="closePartForm()">Cancel</button>
+      <button class="fs-btn" onclick="savePartStatus()">Update Status</button>
     </div>
   </div>
 </div>
