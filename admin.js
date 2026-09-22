@@ -57,6 +57,7 @@ function initAuthListener() {
       populateForm();
       renderProgramsTable();
       renderParticipantsTable();
+      loadFormFieldsIntoBuilder();
     } else {
       login.style.display = 'flex';
       shell.style.display = 'none';
@@ -105,9 +106,17 @@ function goSec(btn) {
     actions.innerHTML = `<button class="save-btn" onclick="saveHomeContent()">💾 Save Changes</button>`;
   } else if (secId === 'prog-adm') {
     actions.innerHTML = `<button class="add-btn" onclick="openProgramForm()">+ Add Program</button>`;
+  } else if (secId === 'part-adm') {
+    actions.innerHTML = `<button class="save-btn" onclick="renderParticipantsTable()">🔄 Refresh</button>`;
   } else if (secId === 'site-adm') {
     actions.innerHTML = `<button class="save-btn" onclick="saveSiteInfo()">💾 Save Changes</button>`;
   }
+
+  // Re-fetch fresh data every time these tabs are opened, instead of only
+  // once at login — otherwise a submission made after login never shows
+  // up until the admin manually reloads the whole page.
+  if (secId === 'prog-adm') renderProgramsTable();
+  if (secId === 'part-adm') { renderParticipantsTable(); loadFormFieldsIntoBuilder(); }
 
   closeSidebar();
 }
@@ -356,6 +365,79 @@ async function deleteProgramAction(id) {
 }
 
 /*===== PARTICIPANTS ("Join This Program" submissions) =====*/
+let joinFormFields = [];
+let ffFieldCount = 0;
+
+async function loadFormFieldsIntoBuilder() {
+  const content = await loadSiteContent();
+  joinFormFields = (content && content.joinFormFields) || [
+    { id: 'phone', label: 'Phone', type: 'tel', required: false },
+    { id: 'message', label: 'Message', type: 'textarea', required: false }
+  ];
+  renderFormFieldsBuilder();
+}
+
+function renderFormFieldsBuilder() {
+  const list = document.getElementById('form-fields-list');
+  if (!list) return;
+  if (!joinFormFields.length) {
+    list.innerHTML = `<p style="color:var(--muted);font-size:.85rem;padding:6px 0;">No extra fields — the form will only ask for Name and Email. Click "+ Add Field" to add more.</p>`;
+    return;
+  }
+  list.innerHTML = joinFormFields.map((f, i) => `
+    <div class="ff-row" data-idx="${i}">
+      <input type="text" class="ff-label" value="${f.label}" placeholder="Field label, e.g. Phone">
+      <select class="ff-type">
+        <option value="text" ${f.type === 'text' ? 'selected' : ''}>Short text</option>
+        <option value="tel" ${f.type === 'tel' ? 'selected' : ''}>Phone</option>
+        <option value="email" ${f.type === 'email' ? 'selected' : ''}>Email</option>
+        <option value="number" ${f.type === 'number' ? 'selected' : ''}>Number</option>
+        <option value="textarea" ${f.type === 'textarea' ? 'selected' : ''}>Long text</option>
+      </select>
+      <label class="req"><input type="checkbox" class="ff-required" ${f.required ? 'checked' : ''}> Required</label>
+      <button class="ff-del" onclick="removeFormFieldRow(${i})">🗑</button>
+    </div>`).join('');
+}
+
+function addFormFieldRow() {
+  ffFieldCount++;
+  joinFormFields.push({ id: 'f' + Date.now() + ffFieldCount, label: '', type: 'text', required: false });
+  renderFormFieldsBuilder();
+}
+
+function removeFormFieldRow(i) {
+  joinFormFields.splice(i, 1);
+  renderFormFieldsBuilder();
+}
+
+async function saveFormFields() {
+  // Read whatever is currently in the DOM rows back into joinFormFields
+  // (preserving each field's id) before saving.
+  const rows = document.querySelectorAll('#form-fields-list .ff-row');
+  const updated = [];
+  rows.forEach(row => {
+    const idx = Number(row.dataset.idx);
+    const original = joinFormFields[idx] || {};
+    const label = row.querySelector('.ff-label').value.trim();
+    if (!label) return; // skip empty rows
+    updated.push({
+      id: original.id || ('f' + Date.now() + idx),
+      label,
+      type: row.querySelector('.ff-type').value,
+      required: row.querySelector('.ff-required').checked
+    });
+  });
+  joinFormFields = updated;
+
+  const result = await saveSiteContent({ joinFormFields });
+  if (result.success) {
+    toast("Form fields saved! ✅");
+    renderFormFieldsBuilder();
+  } else {
+    toast(result.error || "Save failed!", true);
+  }
+}
+
 async function renderParticipantsTable() {
   const body = document.getElementById('partbl-body');
   if (!body) return;
@@ -370,11 +452,12 @@ async function renderParticipantsTable() {
 
   body.innerHTML = cachedParticipants.map(p => {
     const dateStr = p.submittedAt ? new Date(p.submittedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+    const phoneVal = p.phone || (p.fields && Object.entries(p.fields).find(([k]) => /phone/i.test(k))?.[1]);
     return `
     <tr>
       <td><strong>${p.name}</strong></td>
       <td>${p.programTitle || '—'}</td>
-      <td style="font-size:.8rem;color:var(--muted);">${p.email}${p.phone ? '<br>' + p.phone : ''}</td>
+      <td style="font-size:.8rem;color:var(--muted);">${p.email}${phoneVal ? '<br>' + phoneVal : ''}</td>
       <td><span class="bs ${p.status || 'new'}">${p.status || 'new'}</span></td>
       <td style="font-size:.8rem;color:var(--muted);white-space:nowrap;">${dateStr}</td>
       <td class="tbl-acts">
@@ -391,10 +474,24 @@ function openPartForm(id) {
   document.getElementById('part-id').value = p.id;
   document.getElementById('part-name').value = p.name || '';
   document.getElementById('part-email').value = p.email || '';
-  document.getElementById('part-phone').value = p.phone || '';
   document.getElementById('part-program').value = p.programTitle || '';
-  document.getElementById('part-message').value = p.message || '';
   document.getElementById('part-status').value = p.status || 'new';
+
+  // Dynamic extra answers (new submissions use p.fields; older ones may
+  // still have separate phone/message properties — show both gracefully).
+  const extra = document.getElementById('part-extra-fields');
+  const entries = [];
+  if (p.fields && typeof p.fields === 'object') {
+    Object.entries(p.fields).forEach(([label, val]) => { if (val) entries.push([label, val]); });
+  }
+  if (!p.fields) {
+    if (p.phone) entries.push(['Phone', p.phone]);
+    if (p.message) entries.push(['Message', p.message]);
+  }
+  extra.innerHTML = entries.length
+    ? entries.map(([label, val]) => `<div class="fg"><label>${label}</label><textarea class="fi" disabled>${val}</textarea></div>`).join('')
+    : `<p style="color:var(--muted);font-size:.85rem;">No additional answers.</p>`;
+
   document.getElementById('partmodal').classList.add('open');
 }
 

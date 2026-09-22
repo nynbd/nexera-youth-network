@@ -109,6 +109,12 @@ textarea.fi{min-height:70px;resize:vertical;}
 .bs.contacted{background:rgba(245,130,31,.14);color:var(--orange-dk);}
 .bs.approved{background:rgba(34,197,94,.14);color:#1a9c5a;}
 .bs.rejected{background:rgba(192,57,43,.14);color:#c0392b;}
+.ff-row{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px;flex-wrap:wrap;}
+.ff-row input[type="text"]{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);color:var(--ink);padding:8px 11px;border-radius:6px;font-size:.85rem;outline:none;font-family:inherit;}
+.ff-row select{background:var(--card);border:1px solid var(--line);color:var(--ink);padding:8px 9px;border-radius:6px;font-size:.82rem;outline:none;font-family:inherit;}
+.ff-row label.req{display:flex;align-items:center;gap:5px;font-size:.78rem;color:var(--muted);white-space:nowrap;}
+.ff-row .ff-del{background:none;border:1px solid var(--line);color:#c0392b;border-radius:6px;padding:7px 10px;cursor:pointer;font-size:.8rem;flex-shrink:0;}
+.ff-row .ff-del:hover{background:rgba(192,57,43,.08);}
 .empty-row td{text-align:center;color:var(--muted);padding:32px!important;}
 
 /* Modal */
@@ -277,6 +283,15 @@ textarea.fi{min-height:70px;resize:vertical;}
 
       <!-- PARTICIPANTS -->
       <div class="adm-sec" id="part-adm">
+        <div class="card" style="margin-bottom:18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line);">
+            <h2 style="margin:0;padding:0;border:none;">📝 Join Form Fields</h2>
+            <button class="add-btn" onclick="addFormFieldRow()">+ Add Field</button>
+          </div>
+          <p style="font-size:.8rem;color:var(--muted);margin-bottom:14px;">Name and Email always appear first and can't be removed. Add, remove, or relabel any extra question below — changes apply immediately on the live site.</p>
+          <div id="form-fields-list"></div>
+          <button class="save-btn" style="margin-top:6px;" onclick="saveFormFields()">💾 Save Form Fields</button>
+        </div>
         <div class="tbl-wrap">
           <table class="tbl">
             <thead><tr><th>Name</th><th>Program</th><th>Contact</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
@@ -367,12 +382,9 @@ textarea.fi{min-height:70px;resize:vertical;}
     </div>
     <input type="hidden" id="part-id">
     <div class="fg"><label>Name</label><input class="fi" id="part-name" disabled></div>
-    <div class="row2">
-      <div class="fg"><label>Email</label><input class="fi" id="part-email" disabled></div>
-      <div class="fg"><label>Phone</label><input class="fi" id="part-phone" disabled></div>
-    </div>
+    <div class="fg"><label>Email</label><input class="fi" id="part-email" disabled></div>
     <div class="fg"><label>Program</label><input class="fi" id="part-program" disabled></div>
-    <div class="fg"><label>Message</label><textarea class="fi" id="part-message" disabled></textarea></div>
+    <div id="part-extra-fields"></div>
     <div class="fg"><label>Status</label>
       <select class="fi" id="part-status">
         <option value="new">New</option>

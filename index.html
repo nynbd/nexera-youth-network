@@ -478,8 +478,7 @@ body.loading{overflow:hidden;}
       <p class="jf-sub">Fill this in and we'll get back to you with next steps.</p>
       <div class="jf-fg"><label>Full Name *</label><input id="jf-name" placeholder="Your name"></div>
       <div class="jf-fg"><label>Email *</label><input id="jf-email" type="email" placeholder="you@email.com"></div>
-      <div class="jf-fg"><label>Phone</label><input id="jf-phone" placeholder="+880 1XXX-XXXXXX"></div>
-      <div class="jf-fg"><label>Message (optional)</label><textarea id="jf-message" placeholder="Anything you'd like us to know..."></textarea></div>
+      <div id="jf-extra-fields"></div>
       <button class="pg-join-btn" onclick="submitJoinForm()">Submit</button>
     </div>
     <div id="jf-success-view" class="jf-success" style="display:none;">
@@ -546,6 +545,7 @@ function nynSubmit(e){
 document.addEventListener('DOMContentLoaded', async () => {
   await waitForFirebase();
   const content = await loadSiteContent();
+  siteContent = content || {};
   if (!content) { window.nynMark && window.nynMark(); return; }
 
   const setText = (id, val) => {
@@ -641,6 +641,12 @@ function closeProgramModal() {
 
 /*===== JOIN THIS PROGRAM =====*/
 let currentModalProgram = null;
+let siteContent = {};
+
+const DEFAULT_JOIN_FIELDS = [
+  { id: 'phone', label: 'Phone', type: 'tel', required: false },
+  { id: 'message', label: 'Message', type: 'textarea', required: false }
+];
 
 function toast(msg, isErr) {
   const t = document.getElementById('toast');
@@ -656,8 +662,19 @@ function openJoinForm() {
   document.getElementById('jf-program-name').textContent = currentModalProgram.title;
   document.getElementById('jf-name').value = '';
   document.getElementById('jf-email').value = '';
-  document.getElementById('jf-phone').value = '';
-  document.getElementById('jf-message').value = '';
+
+  const fields = (siteContent.joinFormFields && siteContent.joinFormFields.length)
+    ? siteContent.joinFormFields
+    : DEFAULT_JOIN_FIELDS;
+
+  document.getElementById('jf-extra-fields').innerHTML = fields.map(f => {
+    const req = f.required ? ' *' : '';
+    if (f.type === 'textarea') {
+      return `<div class="jf-fg"><label>${f.label}${req}</label><textarea data-field-label="${f.label}" data-required="${!!f.required}"></textarea></div>`;
+    }
+    return `<div class="jf-fg"><label>${f.label}${req}</label><input type="${f.type || 'text'}" data-field-label="${f.label}" data-required="${!!f.required}"></div>`;
+  }).join('');
+
   document.getElementById('jf-form-view').style.display = 'block';
   document.getElementById('jf-success-view').style.display = 'none';
   document.getElementById('jf-modal-ov').classList.add('open');
@@ -670,10 +687,20 @@ function closeJoinForm() {
 async function submitJoinForm() {
   const name = document.getElementById('jf-name').value.trim();
   const email = document.getElementById('jf-email').value.trim();
-  const phone = document.getElementById('jf-phone').value.trim();
-  const message = document.getElementById('jf-message').value.trim();
 
   if (!name || !email) return toast("Name and email are required!", true);
+
+  // Collect the dynamic extra fields, checking required ones.
+  const fields = {};
+  const extraInputs = document.querySelectorAll('#jf-extra-fields [data-field-label]');
+  for (const el of extraInputs) {
+    const label = el.dataset.fieldLabel;
+    const val = el.value.trim();
+    if (el.dataset.required === 'true' && !val) {
+      return toast(`Please fill in "${label}"!`, true);
+    }
+    if (val) fields[label] = val;
+  }
 
   const btn = document.querySelector('#jf-form-view .pg-join-btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
@@ -681,7 +708,7 @@ async function submitJoinForm() {
   const result = await addParticipant({
     programId: currentModalProgram.id,
     programTitle: currentModalProgram.title,
-    name, email, phone, message
+    name, email, fields
   });
 
   if (btn) { btn.disabled = false; btn.textContent = 'Submit'; }
