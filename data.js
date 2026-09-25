@@ -94,6 +94,114 @@ async function deleteProgram(id) {
   }
 }
 
+/*===== NETWORK PAGES (Our Network section on homepage) =====*/
+async function loadNetworkPages() {
+  await waitForFirebase();
+  const { collection, getDocs, query, orderBy } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    const snap = await getDocs(query(collection(db, "networkPages"), orderBy("order", "asc")));
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch (err) {
+    console.error("Load network pages error:", err);
+    return [];
+  }
+}
+
+async function addNetworkPage(page) {
+  await waitForFirebase();
+  const { collection, addDoc } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    page.createdAt = Date.now();
+    const ref = await addDoc(collection(db, "networkPages"), page);
+    return { success: true, id: ref.id };
+  } catch (err) {
+    console.error("Add network page error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+async function updateNetworkPage(id, page) {
+  await waitForFirebase();
+  const { doc, updateDoc } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    await updateDoc(doc(db, "networkPages", id), page);
+    return { success: true };
+  } catch (err) {
+    console.error("Update network page error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+async function deleteNetworkPage(id) {
+  await waitForFirebase();
+  const { doc, deleteDoc } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    await deleteDoc(doc(db, "networkPages", id));
+    return true;
+  } catch (err) {
+    console.error("Delete network page error:", err);
+    return false;
+  }
+}
+
+/*===== TEAM MEMBERS =====*/
+async function loadTeam() {
+  await waitForFirebase();
+  const { collection, getDocs, query, orderBy } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    const snap = await getDocs(query(collection(db, "team"), orderBy("createdAt", "desc")));
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch (err) {
+    console.error("Load team error:", err);
+    return [];
+  }
+}
+
+async function addTeamMember(member) {
+  await waitForFirebase();
+  const { collection, addDoc } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    member.createdAt = Date.now();
+    const ref = await addDoc(collection(db, "team"), member);
+    return { success: true, id: ref.id };
+  } catch (err) {
+    console.error("Add team member error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+async function updateTeamMember(id, member) {
+  await waitForFirebase();
+  const { doc, updateDoc } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    await updateDoc(doc(db, "team", id), member);
+    return { success: true };
+  } catch (err) {
+    console.error("Update team member error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+async function deleteTeamMember(id) {
+  await waitForFirebase();
+  const { doc, deleteDoc } = window.firebaseFunctions;
+  const db = window.firebaseDB;
+  try {
+    await deleteDoc(doc(db, "team", id));
+    return true;
+  } catch (err) {
+    console.error("Delete team member error:", err);
+    return false;
+  }
+}
+
 // Free-tier ImgBB upload — used for program cover images in the admin panel.
 async function uploadToImgBB(file) {
   const key = "b374ae6a3edcf12a90a5b7be9ec39f50";

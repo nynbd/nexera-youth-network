@@ -124,6 +124,17 @@ nav a:hover{color:var(--navy);background:var(--bg-alt);}
 .prog-more::after{content:"→";}
 .prog-card:hover .prog-more{gap:9px;}
 
+/* Team — horizontal accent-bar cards, deliberately different from Programs */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;}
+.team-card{display:flex;gap:16px;align-items:flex-start;background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:10px;padding:20px;transition:box-shadow .2s,border-left-color .2s;}
+.team-card:hover{box-shadow:0 8px 24px rgba(20,49,92,.1);border-left-color:var(--navy);}
+.team-photo{width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--bg-alt);}
+.team-photo-ph{width:64px;height:64px;border-radius:50%;flex-shrink:0;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.15rem;}
+.team-info{min-width:0;}
+.team-info h3{font-family:'Montserrat',sans-serif;font-size:.98rem;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.team-role{display:block;color:var(--orange-dk);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;}
+.team-bio{color:var(--muted);font-size:.83rem;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
 /* Program detail modal */
 .pg-modal-ov{position:fixed;inset:0;z-index:5000;background:rgba(13,27,42,.6);display:flex;align-items:flex-start;justify-content:center;padding:30px 16px;opacity:0;pointer-events:none;transition:opacity .2s;overflow-y:auto;}
 .pg-modal-ov.open{opacity:1;pointer-events:all;}
@@ -284,6 +295,7 @@ body.loading{overflow:hidden;}
     </a>
     <nav id="nav">
       <a href="#about">About</a>
+      <a href="#team">Team</a>
       <a href="#programs">Programs</a>
       <a href="#join">Get Involved</a>
       <a href="#contact">Contact</a>
@@ -350,6 +362,30 @@ body.loading{overflow:hidden;}
   </div>
 </section>
 
+<section class="section" id="team">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag">The People Behind It</div>
+      <h2>Meet the team</h2>
+      <p>The people who plan, run, and show up for every program.</p>
+    </div>
+    <div class="team-grid" id="team-grid">
+      <div class="team-card"><p style="color:var(--muted);padding:20px;">Loading team...</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="network" style="background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:none;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag">Our Network</div>
+      <h2>Affiliated pages</h2>
+      <p>NextEra Youth Network is the official hub — explore our partner &amp; branch pages below.</p>
+    </div>
+    <div class="team-grid" id="network-grid"></div>
+  </div>
+</section>
+
 <section class="section" id="programs" style="background:var(--bg-alt);">
   <div class="wrap">
     <div class="section-head">
@@ -384,32 +420,19 @@ body.loading{overflow:hidden;}
       <div class="section-tag">Get In Touch</div>
       <h2>Questions before you join?</h2>
     </div>
-    <div class="contact-grid">
-      <div class="contact-info">
-        <h3>Reach us directly</h3>
-        <div class="contact-row">
-          <svg class="contact-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M3 6l9 6 9-6M3 6h18v12H3z" stroke-linejoin="round"/></svg>
-          <div><strong>Email</strong><span id="c-contact-email">hello@nextera-youth.org</span></div>
-        </div>
-        <div class="contact-row">
-          <svg class="contact-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.78.6 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.27a2 2 0 0 1 2.11-.45c.85.28 1.73.48 2.63.6A2 2 0 0 1 22 16.92z"/></svg>
-          <div><strong>Phone</strong><span id="c-contact-phone">+880 1XXX-XXXXXX</span></div>
-        </div>
-        <div class="contact-row">
-          <svg class="contact-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <div><strong>Location</strong><span id="c-contact-location">Dhaka, Bangladesh</span></div>
-        </div>
+    <div class="contact-info" style="max-width:420px;">
+      <h3>Reach us directly</h3>
+      <div class="contact-row">
+        <svg class="contact-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M3 6l9 6 9-6M3 6h18v12H3z" stroke-linejoin="round"/></svg>
+        <div><strong>Email</strong><span id="c-contact-email">hello@nextera-youth.org</span></div>
       </div>
-      <div>
-        <form id="cform" onsubmit="return nynSubmit(event)">
-          <div class="form-grid">
-            <div class="field"><label>Full Name</label><input type="text" required placeholder="Your name"></div>
-            <div class="field"><label>Email</label><input type="email" required placeholder="you@email.com"></div>
-            <div class="field full"><label>Message</label><textarea required placeholder="Tell us what you're interested in..."></textarea></div>
-          </div>
-          <button type="submit" class="btn btn-orange" style="margin-top:18px;">Send Message</button>
-          <p class="form-msg ok" id="cform-msg">Thanks — we'll get back to you within a couple of days.</p>
-        </form>
+      <div class="contact-row">
+        <svg class="contact-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.78.6 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.27a2 2 0 0 1 2.11-.45c.85.28 1.73.48 2.63.6A2 2 0 0 1 22 16.92z"/></svg>
+        <div><strong>Phone</strong><span id="c-contact-phone">+880 1XXX-XXXXXX</span></div>
+      </div>
+      <div class="contact-row">
+        <svg class="contact-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div><strong>Location</strong><span id="c-contact-location">Dhaka, Bangladesh</span></div>
       </div>
     </div>
   </div>
@@ -434,6 +457,7 @@ body.loading{overflow:hidden;}
         <h4>Navigate</h4>
         <nav>
           <a href="#about">About</a>
+          <a href="#team">Team</a>
           <a href="#programs">Programs</a>
           <a href="#join">Get Involved</a>
           <a href="#contact">Contact</a>
@@ -450,7 +474,7 @@ body.loading{overflow:hidden;}
     </div>
     <div class="foot-bottom">
       <p>© 2026 NextEra Youth Network. All rights reserved.</p>
-      <p>Where Ideas Meet Impact · <a href="admin.html" style="color:#7E90AC;">Admin</a></p>
+      <p>Where Ideas Meet Impact</p>
     </div>
   </div>
 </footer>
@@ -494,7 +518,7 @@ body.loading{overflow:hidden;}
 // but never shorter than 1.6s (smooth) and never longer than 7s (safety net).
 (function(){
   var fill=document.getElementById('sp-fill'), splash=document.getElementById('splash');
-  var start=Date.now(), pending=2, finished=false;
+  var start=Date.now(), pending=3, finished=false;
   var pct=8; fill.style.width=pct+'%';
   var tick=setInterval(function(){ pct+= (88-pct)*0.18; fill.style.width=pct+'%'; },350);
   function finish(){
@@ -530,13 +554,6 @@ document.getElementById('hbtn').addEventListener('click', () => {
 document.querySelectorAll('#nav a').forEach(a => a.addEventListener('click', () => {
   document.getElementById('nav').classList.remove('open');
 }));
-
-function nynSubmit(e){
-  e.preventDefault();
-  document.getElementById('cform-msg').classList.add('show');
-  e.target.reset();
-  return false;
-}
 
 // Pull admin-edited content from Firestore and overwrite the page's
 // hardcoded defaults wherever a value was actually saved. If Firestore
@@ -617,6 +634,55 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
     </div>`).join('');
   window.nynMark && window.nynMark();
+});
+
+// Team members — separate collection, managed from Admin → Team.
+document.addEventListener('DOMContentLoaded', async () => {
+  await waitForFirebase();
+  const all = await loadTeam();
+  const team = all.filter(t => t.status !== 'draft');
+  const grid = document.getElementById('team-grid');
+
+  if (!team.length) {
+    grid.innerHTML = `<div class="team-card"><p style="color:var(--muted);">Team profiles coming soon.</p></div>`;
+    window.nynMark && window.nynMark();
+    return;
+  }
+
+  const initials = (name) => (name || '').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+
+  grid.innerHTML = team.map(t => `
+    <div class="team-card">
+      ${t.photo ? `<img class="team-photo" src="${t.photo}" alt="${t.name}">` : `<div class="team-photo-ph">${initials(t.name)}</div>`}
+      <div class="team-info">
+        <h3>${t.name}</h3>
+        ${t.role ? `<span class="team-role">${t.role}</span>` : ''}
+        ${t.bio ? `<p class="team-bio">${t.bio}</p>` : ''}
+      </div>
+    </div>`).join('');
+  window.nynMark && window.nynMark();
+});
+
+// "Our Network" — admin-managed list of affiliated pages; section stays hidden until at least one is added.
+document.addEventListener('DOMContentLoaded', async () => {
+  await waitForFirebase();
+  const pages = await loadNetworkPages();
+  const section = document.getElementById('network');
+  const grid = document.getElementById('network-grid');
+  if (!pages.length) return;
+
+  section.style.display = '';
+  const initials = (name) => (name || '').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+
+  grid.innerHTML = pages.map(p => `
+    <a class="team-card" href="${p.url}" target="_blank" rel="noopener" style="text-decoration:none;cursor:pointer;">
+      ${p.logo ? `<img class="team-photo" src="${p.logo}" alt="${p.name}">` : `<div class="team-photo-ph">${initials(p.name)}</div>`}
+      <div class="team-info">
+        <h3>${p.name}</h3>
+        ${p.description ? `<p class="team-bio">${p.description}</p>` : ''}
+        <span class="team-role" style="margin-top:6px;display:inline-block;">Visit Page →</span>
+      </div>
+    </a>`).join('');
 });
 
 function openProgramModal(i) {

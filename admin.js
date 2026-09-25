@@ -56,6 +56,7 @@ function initAuthListener() {
       shell.style.display = 'flex';
       populateForm();
       renderProgramsTable();
+      renderTeamTable();
       renderParticipantsTable();
       loadFormFieldsIntoBuilder();
     } else {
@@ -95,6 +96,8 @@ function goSec(btn) {
     'dash': 'Dashboard',
     'home-ed': 'Home Page Editor',
     'prog-adm': 'Manage Programs',
+    'team-adm': 'Manage Team',
+    'network-adm': 'Our Network',
     'part-adm': 'Participants',
     'site-adm': 'Site Info'
   };
@@ -106,6 +109,10 @@ function goSec(btn) {
     actions.innerHTML = `<button class="save-btn" onclick="saveHomeContent()">💾 Save Changes</button>`;
   } else if (secId === 'prog-adm') {
     actions.innerHTML = `<button class="add-btn" onclick="openProgramForm()">+ Add Program</button>`;
+  } else if (secId === 'team-adm') {
+    actions.innerHTML = `<button class="add-btn" onclick="openTeamForm()">+ Add Member</button>`;
+  } else if (secId === 'network-adm') {
+    actions.innerHTML = `<button class="add-btn" onclick="openNetworkForm()">+ Add Page</button>`;
   } else if (secId === 'part-adm') {
     actions.innerHTML = `<button class="save-btn" onclick="renderParticipantsTable()">🔄 Refresh</button>`;
   } else if (secId === 'site-adm') {
@@ -116,6 +123,8 @@ function goSec(btn) {
   // once at login — otherwise a submission made after login never shows
   // up until the admin manually reloads the whole page.
   if (secId === 'prog-adm') renderProgramsTable();
+  if (secId === 'team-adm') renderTeamTable();
+  if (secId === 'network-adm') renderNetworkTable();
   if (secId === 'part-adm') { renderParticipantsTable(); loadFormFieldsIntoBuilder(); }
 
   closeSidebar();
@@ -517,6 +526,222 @@ async function deletePartAction(id) {
   if (await deleteParticipant(id)) {
     toast("Deleted.");
     renderParticipantsTable();
+  } else {
+    toast("Delete failed!", true);
+  }
+}
+
+/*===== TEAM MEMBERS =====*/
+let cachedTeam = [];
+
+async function renderTeamTable() {
+  const body = document.getElementById('ttbl-body');
+  if (!body) return;
+  body.innerHTML = `<tr class="empty-row"><td colspan="5">Loading...</td></tr>`;
+  cachedTeam = await loadTeam();
+
+  if (!cachedTeam.length) {
+    body.innerHTML = `<tr class="empty-row"><td colspan="5">No team members yet. Click "+ Add Member" to create one.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = cachedTeam.map(t => `
+    <tr>
+      <td>${t.photo ? `<img class="thumb" src="${t.photo}">` : `<div class="thumb-ph">👤</div>`}</td>
+      <td><strong>${t.name}</strong></td>
+      <td>${t.role || '—'}</td>
+      <td><span class="bs ${t.status || 'active'}">${t.status || 'active'}</span></td>
+      <td class="tbl-acts">
+        <button class="e-btn" onclick="editTeamMember('${t.id}')">Edit</button>
+        <button class="d-btn" onclick="deleteTeamAction('${t.id}')">Delete</button>
+      </td>
+    </tr>`).join('');
+}
+
+function openTeamForm() {
+  document.getElementById('tmodal-title').textContent = "Add Team Member";
+  document.getElementById('t-id').value = '';
+  document.getElementById('t-name').value = '';
+  document.getElementById('t-role').value = '';
+  document.getElementById('t-bio').value = '';
+  document.getElementById('t-status').value = 'active';
+  document.getElementById('t-photo').value = '';
+  document.getElementById('t-photo-url').value = '';
+  document.getElementById('t-photo-prev').innerHTML = '';
+  document.getElementById('tmodal').classList.add('open');
+}
+
+function editTeamMember(id) {
+  const t = cachedTeam.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('tmodal-title').textContent = "Edit Team Member";
+  document.getElementById('t-id').value = t.id;
+  document.getElementById('t-name').value = t.name || '';
+  document.getElementById('t-role').value = t.role || '';
+  document.getElementById('t-bio').value = t.bio || '';
+  document.getElementById('t-status').value = t.status || 'active';
+  document.getElementById('t-photo').value = t.photo || '';
+  document.getElementById('t-photo-url').value = t.photo || '';
+  document.getElementById('t-photo-prev').innerHTML = t.photo ? `<img src="${t.photo}">` : '';
+  document.getElementById('tmodal').classList.add('open');
+}
+
+function closeTeamForm() {
+  document.getElementById('tmodal').classList.remove('open');
+}
+
+async function prevTeamPhoto(input) {
+  if (!input.files?.[0]) return;
+  const prev = document.getElementById('t-photo-prev');
+  prev.innerHTML = `<div style="color:var(--muted);font-size:.82rem;">⏳ Uploading...</div>`;
+  const result = await uploadToImgBB(input.files[0]);
+  if (result.success) {
+    document.getElementById('t-photo').value = result.url;
+    document.getElementById('t-photo-url').value = result.url;
+    prev.innerHTML = `<img src="${result.url}">`;
+  } else {
+    prev.innerHTML = `<div style="color:#c0392b;font-size:.82rem;">❌ Upload failed</div>`;
+  }
+}
+
+async function saveTeamMember() {
+  const id = document.getElementById('t-id').value;
+  const name = document.getElementById('t-name').value.trim();
+  const role = document.getElementById('t-role').value.trim();
+  if (!name) return toast("Name is required!", true);
+  if (!role) return toast("Role / Position is required!", true);
+
+  const member = {
+    name,
+    role,
+    bio: document.getElementById('t-bio').value.trim(),
+    status: document.getElementById('t-status').value,
+    photo: document.getElementById('t-photo').value.trim()
+  };
+
+  const result = id ? await updateTeamMember(id, member) : await addTeamMember(member);
+  if (result.success) {
+    toast(id ? "Team member updated!" : "Team member added!");
+    closeTeamForm();
+    renderTeamTable();
+  } else {
+    toast(result.error || "Save failed!", true);
+  }
+}
+
+async function deleteTeamAction(id) {
+  if (!confirm("Remove this team member?")) return;
+  if (await deleteTeamMember(id)) {
+    toast("Removed.");
+    renderTeamTable();
+  } else {
+    toast("Delete failed!", true);
+  }
+}
+
+/*===== OUR NETWORK (affiliated pages) =====*/
+let cachedNetwork = [];
+
+async function renderNetworkTable() {
+  const body = document.getElementById('nptbl-body');
+  body.innerHTML = `<tr class="empty-row"><td colspan="5">Loading...</td></tr>`;
+  cachedNetwork = await loadNetworkPages();
+
+  if (!cachedNetwork.length) {
+    body.innerHTML = `<tr class="empty-row"><td colspan="5">No network pages yet. Click "+ Add Page" to create one.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = cachedNetwork.map(p => `
+    <tr>
+      <td><strong style="color:var(--navy)">${p.order || '—'}</strong></td>
+      <td>${p.logo ? `<img class="thumb" src="${p.logo}">` : `<div class="thumb-ph">🌐</div>`}</td>
+      <td><strong>${p.name}</strong></td>
+      <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><a href="${p.url}" target="_blank" rel="noopener">${p.url}</a></td>
+      <td class="tbl-acts">
+        <button class="e-btn" onclick="editNetworkPage('${p.id}')">Edit</button>
+        <button class="d-btn" onclick="deleteNetworkAction('${p.id}')">Delete</button>
+      </td>
+    </tr>`).join('');
+}
+
+function openNetworkForm() {
+  document.getElementById('npmodal-title').textContent = "Add Network Page";
+  document.getElementById('np-id').value = '';
+  document.getElementById('np-name').value = '';
+  document.getElementById('np-url').value = '';
+  document.getElementById('np-desc').value = '';
+  document.getElementById('np-order').value = '';
+  document.getElementById('np-logo').value = '';
+  document.getElementById('np-logo-url').value = '';
+  document.getElementById('np-logo-prev').innerHTML = '';
+  document.getElementById('npmodal').classList.add('open');
+}
+
+function editNetworkPage(id) {
+  const p = cachedNetwork.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('npmodal-title').textContent = "Edit Network Page";
+  document.getElementById('np-id').value = p.id;
+  document.getElementById('np-name').value = p.name || '';
+  document.getElementById('np-url').value = p.url || '';
+  document.getElementById('np-desc').value = p.description || '';
+  document.getElementById('np-order').value = p.order || '';
+  document.getElementById('np-logo').value = p.logo || '';
+  document.getElementById('np-logo-url').value = p.logo || '';
+  document.getElementById('np-logo-prev').innerHTML = p.logo ? `<img src="${p.logo}">` : '';
+  document.getElementById('npmodal').classList.add('open');
+}
+
+function closeNetworkForm() {
+  document.getElementById('npmodal').classList.remove('open');
+}
+
+async function prevNetworkLogo(input) {
+  if (!input.files?.[0]) return;
+  const prev = document.getElementById('np-logo-prev');
+  prev.innerHTML = `<div style="color:var(--muted);font-size:.82rem;">⏳ Uploading...</div>`;
+  const result = await uploadToImgBB(input.files[0]);
+  if (result.success) {
+    document.getElementById('np-logo').value = result.url;
+    document.getElementById('np-logo-url').value = result.url;
+    prev.innerHTML = `<img src="${result.url}">`;
+  } else {
+    prev.innerHTML = `<div style="color:#c0392b;font-size:.82rem;">❌ Upload failed</div>`;
+  }
+}
+
+async function saveNetworkPage() {
+  const id = document.getElementById('np-id').value;
+  const name = document.getElementById('np-name').value.trim();
+  let url = document.getElementById('np-url').value.trim();
+  if (!name) return toast("Page name is required!", true);
+  if (!url) return toast("Website/Facebook URL is required!", true);
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+  const page = {
+    name,
+    url,
+    description: document.getElementById('np-desc').value.trim(),
+    order: parseInt(document.getElementById('np-order').value) || 999,
+    logo: document.getElementById('np-logo').value.trim()
+  };
+
+  const result = id ? await updateNetworkPage(id, page) : await addNetworkPage(page);
+  if (result.success) {
+    toast(id ? "Network page updated!" : "Network page added!");
+    closeNetworkForm();
+    renderNetworkTable();
+  } else {
+    toast(result.error || "Save failed!", true);
+  }
+}
+
+async function deleteNetworkAction(id) {
+  if (!confirm("Remove this network page?")) return;
+  if (await deleteNetworkPage(id)) {
+    toast("Removed.");
+    renderNetworkTable();
   } else {
     toast("Delete failed!", true);
   }

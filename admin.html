@@ -183,6 +183,8 @@ textarea.fi{min-height:70px;resize:vertical;}
         <div class="adm-ns">Content</div>
         <button class="adm-nb" data-sec="home-ed" onclick="goSec(this)"><span class="ico">🏠</span>Home Page</button>
         <button class="adm-nb" data-sec="prog-adm" onclick="goSec(this)"><span class="ico">📋</span>Programs</button>
+        <button class="adm-nb" data-sec="team-adm" onclick="goSec(this)"><span class="ico">👥</span>Team</button>
+        <button class="adm-nb" data-sec="network-adm" onclick="goSec(this)"><span class="ico">🌐</span>Our Network</button>
         <button class="adm-nb" data-sec="part-adm" onclick="goSec(this)"><span class="ico">🙋</span>Participants</button>
 
         <div class="adm-ns">Settings</div>
@@ -281,6 +283,31 @@ textarea.fi{min-height:70px;resize:vertical;}
         </div>
       </div>
 
+      <!-- TEAM -->
+      <div class="adm-sec" id="team-adm">
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Photo</th><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="ttbl-body"><tr class="empty-row"><td colspan="5">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- OUR NETWORK -->
+      <div class="adm-sec" id="network-adm">
+        <div style="background:var(--bg-alt);border:1px solid var(--line);border-radius:var(--r-md);padding:18px;margin-bottom:18px;">
+          <p style="color:var(--muted);font-size:.85rem;line-height:1.7;">
+            🌐 Add your other organizer pages here (sister websites, branch pages, etc.). They'll appear as a card grid on the homepage — this section stays hidden until you add at least one page.
+          </p>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Order</th><th>Logo</th><th>Name</th><th>URL</th><th>Actions</th></tr></thead>
+            <tbody id="nptbl-body"><tr class="empty-row"><td colspan="5">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- PARTICIPANTS -->
       <div class="adm-sec" id="part-adm">
         <div class="card" style="margin-bottom:18px;">
@@ -369,6 +396,71 @@ textarea.fi{min-height:70px;resize:vertical;}
     <div class="fm-foot">
       <button class="fc-btn" onclick="closeProgramForm()">Cancel</button>
       <button class="fs-btn" onclick="saveProgram()">Save Program</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT TEAM MEMBER MODAL -->
+<div class="fm-ov" id="tmodal" onclick="if(event.target===this)closeTeamForm()">
+  <div class="fm">
+    <div class="fm-head">
+      <h3 id="tmodal-title">Add Team Member</h3>
+      <button onclick="closeTeamForm()">✕</button>
+    </div>
+    <input type="hidden" id="t-id">
+    <div class="row2">
+      <div class="fg"><label>Name *</label><input class="fi" id="t-name" placeholder="Full name"></div>
+      <div class="fg"><label>Role / Position *</label><input class="fi" id="t-role" placeholder="e.g. President"></div>
+    </div>
+    <div class="fg"><label>Bio (optional)</label><textarea class="fi" id="t-bio" placeholder="A line or two about them..."></textarea></div>
+    <div class="fg"><label>Status</label>
+      <select class="fi" id="t-status">
+        <option value="draft">Draft (hidden)</option>
+        <option value="active" selected>Active (visible)</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Photo</label>
+      <input type="hidden" id="t-photo">
+      <div class="up-area" onclick="document.getElementById('t-photo-file').click()">
+        <p>📷 Tap to upload photo (auto-uploads to cloud)</p>
+      </div>
+      <input type="file" id="t-photo-file" accept="image/*" style="display:none" onchange="prevTeamPhoto(this)">
+      <input class="fi" id="t-photo-url" placeholder="Or paste an image URL here..." oninput="document.getElementById('t-photo').value=this.value">
+      <div class="up-prev" id="t-photo-prev"></div>
+    </div>
+    <div class="fm-foot">
+      <button class="fc-btn" onclick="closeTeamForm()">Cancel</button>
+      <button class="fs-btn" onclick="saveTeamMember()">Save Member</button>
+    </div>
+  </div>
+</div>
+
+<!-- NETWORK PAGE MODAL -->
+<div class="fm-ov" id="npmodal" onclick="if(event.target===this)closeNetworkForm()">
+  <div class="fm">
+    <div class="fm-head">
+      <h3 id="npmodal-title">Add Network Page</h3>
+      <button onclick="closeNetworkForm()">✕</button>
+    </div>
+    <input type="hidden" id="np-id">
+    <div class="fg"><label>Page / Organization Name *</label><input class="fi" id="np-name" placeholder="e.g. TalentVerse Bangladesh"></div>
+    <div class="fg"><label>Website / Facebook URL *</label><input class="fi" id="np-url" placeholder="https://..."></div>
+    <div class="fg"><label>Short Description (optional)</label><input class="fi" id="np-desc" placeholder="e.g. Olympiad hub for Bangladeshi students"></div>
+    <div class="fg"><label>Display Order</label><input class="fi" type="number" id="np-order" min="1" placeholder="Lower number shows first"></div>
+    <div class="fg">
+      <label>Logo (optional)</label>
+      <input type="hidden" id="np-logo">
+      <div class="up-area" onclick="document.getElementById('np-logo-file').click()">
+        <p>📷 Tap to upload logo (auto-uploads to cloud)</p>
+      </div>
+      <input type="file" id="np-logo-file" accept="image/*" style="display:none" onchange="prevNetworkLogo(this)">
+      <input class="fi" id="np-logo-url" placeholder="Or paste an image URL here..." oninput="document.getElementById('np-logo').value=this.value">
+      <div class="up-prev" id="np-logo-prev"></div>
+    </div>
+    <div class="fm-foot">
+      <button class="fc-btn" onclick="closeNetworkForm()">Cancel</button>
+      <button class="fs-btn" onclick="saveNetworkPage()">Save Page</button>
     </div>
   </div>
 </div>
