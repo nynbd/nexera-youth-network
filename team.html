@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team — NextEra Youth Network</title>
+<meta name="description" content="Meet the people who plan, run, and show up for every NextEra Youth Network program.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#14315C;--navy-dk:#0D1B2A;--navy-lt:#1B3A6B;
+  --orange:#F5821F;--orange-dk:#D96D0F;--orange-lt:#FFA857;
+  --bg:#FFFFFF;--bg-alt:#F5F7FA;
+  --ink:#0D1B2A;--muted:#5B6472;--line:rgba(13,27,42,.1);
+  --r-sm:6px;--r-md:14px;--r-lg:28px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1420;--bg-alt:#101828;--ink:#EAF0FA;--muted:#93A0B4;--line:rgba(255,255,255,.1);
+    --navy:#1B3A6B;--navy-lt:#274a82;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1420;--bg-alt:#101828;--ink:#EAF0FA;--muted:#93A0B4;--line:rgba(255,255,255,.1);
+  --navy:#1B3A6B;--navy-lt:#274a82;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;
+  background:var(--bg);color:var(--ink);
+  min-height:100vh;overflow-x:hidden;line-height:1.6;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+h1,h2,h3,h4{font-family:'Montserrat',sans-serif;line-height:1.15;letter-spacing:-.01em;}
+
+/* ===== HEADER ===== */
+header{
+  position:sticky;top:0;z-index:500;background:var(--bg);
+  border-bottom:1px solid var(--line);
+  transition:box-shadow .3s ease;
+}
+header.scrolled{box-shadow:0 8px 24px rgba(13,27,42,.08);}
+.hdr-inner{max-width:1120px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.brand-mark{width:38px;height:38px;flex-shrink:0;}
+.brand-text{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.05rem;color:var(--navy);white-space:nowrap;}
+.brand-text span{color:var(--orange);}
+nav{display:flex;align-items:center;gap:6px;}
+nav a{
+  text-decoration:none;color:var(--muted);font-size:.92rem;font-weight:600;
+  padding:9px 14px;border-radius:var(--r-sm);transition:color .2s,background .2s;white-space:nowrap;
+}
+nav a:hover{color:var(--navy);background:var(--bg-alt);}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 22px;border-radius:var(--r-sm);font-weight:700;font-size:.9rem;
+  border:none;text-decoration:none;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,opacity .2s;
+}
+.btn-orange{background:linear-gradient(135deg,var(--orange),var(--orange-dk));color:#fff;box-shadow:0 6px 20px rgba(245,130,31,.32);}
+.btn-orange:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(245,130,31,.4);}
+.btn-orange:active{transform:translateY(0);box-shadow:0 4px 14px rgba(245,130,31,.3);}
+.btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--line);}
+.btn-outline:hover{border-color:var(--navy);transform:translateY(-2px);}
+.btn-white{background:#fff;color:var(--navy);}
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.18);}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:6px;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--navy);border-radius:2px;}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;color:#fff;overflow:hidden;padding:80px 0 0;
+  background:radial-gradient(ellipse 800px 520px at 12% 18%,rgba(245,130,31,.12),transparent 60%),linear-gradient(165deg,var(--navy-dk),var(--navy) 130%);
+}
+.hero-inner{
+  max-width:1120px;margin:0 auto;padding:0 24px 90px;
+  display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;
+}
+.hero-eyebrow{color:var(--orange-lt);font-weight:700;font-size:.85rem;margin-bottom:18px;}
+.hero h1{font-size:clamp(2.1rem,4.6vw,3.5rem);font-weight:900;color:#fff;margin-bottom:22px;}
+.hero h1 em{font-style:normal;color:var(--orange);}
+.hero p{color:#C7D2E3;font-size:1.06rem;max-width:480px;margin-bottom:34px;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-visual{position:relative;height:360px;}
+.hero-visual svg{width:100%;height:100%;}
+
+/* ===== STATS STRIP ===== */
+.stats{background:var(--bg-alt);border-bottom:1px solid var(--line);}
+.stats-inner{max-width:1120px;margin:0 auto;padding:44px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px;text-align:center;}
+.stat-num{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.1rem;background:linear-gradient(135deg,var(--navy),var(--navy-lt));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.stat-num span{background:none;-webkit-background-clip:unset;background-clip:unset;color:var(--orange);}
+.stat-label{color:var(--muted);font-size:.82rem;font-weight:600;margin-top:4px;}
+
+/* ===== SECTION GENERIC ===== */
+.section{padding:90px 0;}
+.section-head{max-width:620px;margin-bottom:52px;}
+.section-tag{color:var(--orange-dk);font-weight:700;font-size:.85rem;margin-bottom:10px;}
+.section-head h2{font-size:clamp(1.6rem,3vw,2.3rem);font-weight:800;color:var(--ink);}
+.section-head p{color:var(--muted);margin-top:14px;font-size:1rem;}
+
+/* ===== ABOUT ===== */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+.about-text p{color:var(--muted);margin-bottom:16px;font-size:1rem;}
+.about-text p:last-child{margin-bottom:0;}
+.about-graphic{position:relative;aspect-ratio:1/1;background:var(--bg-alt);border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.about-graphic svg{width:58%;height:58%;}
+
+/* ===== PROGRAMS ===== */
+.prog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px;}
+.prog-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;cursor:pointer;position:relative;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s ease,border-color .3s ease;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(20,49,92,.05);}
+.prog-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--orange-lt));transform:scaleX(0);transform-origin:left;transition:transform .35s ease;z-index:1;}
+.prog-card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(20,49,92,.18),0 4px 12px rgba(20,49,92,.08);border-color:var(--navy-lt);}
+.prog-card:hover::before{transform:scaleX(1);}
+.prog-img{width:100%;height:170px;object-fit:cover;display:block;background:var(--bg-alt);}
+.prog-img-ph{width:100%;height:170px;background:linear-gradient(135deg,var(--navy),var(--navy-lt));display:flex;align-items:center;justify-content:center;font-size:2.6rem;}
+.prog-badge{position:absolute;top:10px;left:10px;font-size:.66rem;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:5px;text-transform:uppercase;color:#fff;backdrop-filter:blur(3px);}
+.prog-badge.active{background:rgba(34,150,94,.9);}
+.prog-badge.upcoming{background:rgba(245,130,31,.92);}
+.prog-badge.closed{background:rgba(91,100,114,.9);}
+.prog-body{padding:18px;flex:1;display:flex;flex-direction:column;}
+.prog-cat{display:inline-flex;align-items:center;gap:4px;background:rgba(20,49,92,.06);border:1px solid var(--line);padding:3px 9px;border-radius:5px;font-size:.7rem;font-weight:600;color:var(--navy);margin-bottom:10px;width:fit-content;}
+.prog-card h3{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--ink);line-height:1.3;}
+.prog-card p{color:var(--muted);font-size:.85rem;line-height:1.6;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.prog-more{display:inline-flex;align-items:center;gap:5px;margin-top:12px;color:var(--orange-dk);font-size:.8rem;font-weight:700;background:none;border:none;cursor:pointer;padding:0;transition:gap .2s;}
+.prog-more::after{content:"→";}
+.prog-card:hover .prog-more{gap:9px;}
+
+/* Team — horizontal accent-bar cards, deliberately different from Programs */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;}
+.team-card{display:flex;gap:16px;align-items:flex-start;background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:10px;padding:20px;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s ease,border-left-color .3s ease;}
+.team-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(20,49,92,.14);border-left-color:var(--navy);}
+.team-photo{width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--bg-alt);}
+.team-photo-ph{width:64px;height:64px;border-radius:50%;flex-shrink:0;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.15rem;}
+.team-info{min-width:0;}
+.team-info h3{font-family:'Montserrat',sans-serif;font-size:.98rem;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.team-role{display:block;color:var(--orange-dk);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;}
+.team-bio{color:var(--muted);font-size:.83rem;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+/* Program detail modal */
+.pg-modal-ov{position:fixed;inset:0;z-index:5000;background:rgba(13,27,42,.6);display:flex;align-items:flex-start;justify-content:center;padding:30px 16px;opacity:0;pointer-events:none;transition:opacity .2s;overflow-y:auto;}
+.pg-modal-ov.open{opacity:1;pointer-events:all;}
+.pg-modal{background:var(--bg);border-radius:var(--r-lg);max-width:560px;width:100%;margin:auto;overflow:hidden;position:relative;}
+.pg-modal-close{position:absolute;top:12px;right:12px;background:rgba(13,27,42,.55);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;z-index:2;}
+.pg-modal-img{width:100%;height:220px;object-fit:cover;display:block;background:var(--bg-alt);}
+.pg-modal-img-ph{width:100%;height:220px;background:linear-gradient(135deg,var(--navy),var(--navy-lt));display:flex;align-items:center;justify-content:center;font-size:3rem;}
+.pg-modal-body{padding:26px;}
+.pg-modal-body h2{font-family:'Montserrat',sans-serif;font-size:1.3rem;font-weight:800;color:var(--ink);margin:10px 0 14px;}
+.pg-modal-body p{color:var(--muted);font-size:.94rem;line-height:1.7;}
+.pg-join-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,var(--orange),var(--orange-dk));color:#fff;padding:13px 20px;border-radius:9px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;margin-top:20px;transition:opacity .2s;}
+.pg-join-btn:hover{opacity:.9;}
+
+/* Join This Program form modal */
+.jf-modal-ov{position:fixed;inset:0;z-index:5100;background:rgba(13,27,42,.6);display:flex;align-items:flex-start;justify-content:center;padding:30px 16px;opacity:0;pointer-events:none;transition:opacity .2s;overflow-y:auto;}
+.jf-modal-ov.open{opacity:1;pointer-events:all;}
+.jf-modal{background:var(--bg);border-radius:var(--r-lg);max-width:440px;width:100%;margin:auto;padding:28px;}
+.jf-modal h3{font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:800;color:var(--ink);margin-bottom:4px;}
+.jf-modal .jf-sub{color:var(--muted);font-size:.85rem;margin-bottom:20px;}
+.jf-fg{margin-bottom:14px;}
+.jf-fg label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:6px;}
+.jf-fg input,.jf-fg textarea{width:100%;background:var(--bg-alt);border:1px solid var(--line);color:var(--ink);padding:11px 14px;border-radius:8px;font-size:.9rem;outline:none;font-family:inherit;transition:border-color .2s;}
+.jf-fg input:focus,.jf-fg textarea:focus{border-color:var(--orange);}
+.jf-fg textarea{min-height:70px;resize:vertical;}
+.jf-close{float:right;background:none;border:none;font-size:1.1rem;color:var(--muted);cursor:pointer;}
+.jf-success{text-align:center;padding:10px 0;}
+.jf-success .ri{font-size:3rem;margin-bottom:14px;}
+.jf-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy-dk);color:#fff;padding:13px 22px;border-radius:10px;font-size:.87rem;font-weight:600;transition:transform .3s;z-index:9000;box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.jf-toast.show{transform:translateX(-50%) translateY(0);}
+.jf-toast.err{background:#c0392b;}
+
+/* ===== JOIN CTA BANNER ===== */
+.join-banner{
+  background:var(--orange);border-radius:var(--r-lg);padding:56px 48px;
+  display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;color:var(--navy-dk);
+}
+.join-banner h2{font-size:clamp(1.5rem,2.6vw,2rem);font-weight:800;max-width:460px;}
+.join-banner p{margin-top:10px;color:rgba(13,27,42,.75);max-width:440px;}
+.join-actions{display:flex;gap:14px;flex-wrap:wrap;flex-shrink:0;}
+
+/* ===== CONTACT ===== */
+.contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;}
+.contact-info h3{font-size:1.2rem;font-weight:700;margin-bottom:18px;color:var(--ink);}
+.contact-row{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start;}
+.contact-ico{width:20px;height:20px;color:var(--orange);flex-shrink:0;margin-top:2px;}
+.contact-row div{color:var(--muted);font-size:.92rem;}
+.contact-row strong{display:block;color:var(--ink);font-size:.92rem;margin-bottom:2px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-grid .full{grid-column:1/-1;}
+.field label{display:block;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:7px;}
+.field input,.field textarea{
+  width:100%;background:var(--bg-alt);border:1px solid var(--line);color:var(--ink);
+  padding:12px 14px;border-radius:var(--r-sm);font-size:.92rem;font-family:inherit;outline:none;
+  transition:border-color .2s;
+}
+.field input:focus,.field textarea:focus{border-color:var(--orange);}
+.field textarea{min-height:110px;resize:vertical;}
+.form-msg{font-size:.86rem;margin-top:14px;display:none;}
+.form-msg.show{display:block;}
+.form-msg.ok{color:#1a9c5a;}
+
+/* ===== FOOTER ===== */
+footer{background:var(--navy-dk);color:#B9C6DC;padding:56px 0 26px;}
+.foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+.foot-brand{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.foot-brand .brand-mark{width:32px;height:32px;}
+.foot-brand span{font-family:'Montserrat',sans-serif;font-weight:800;color:#fff;font-size:1rem;}
+.foot-brand span em{font-style:normal;color:var(--orange-lt);}
+footer p.desc{font-size:.88rem;color:#8FA0BC;max-width:280px;}
+footer h4{color:#fff;font-size:.85rem;font-weight:700;margin-bottom:14px;letter-spacing:.02em;}
+footer nav a{display:block;color:#B9C6DC;text-decoration:none;font-size:.88rem;padding:5px 0;}
+footer nav a:hover{color:var(--orange-lt);}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:.8rem;color:#7E90AC;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:860px){
+  nav{display:none;position:fixed;top:69px;left:0;right:0;bottom:0;background:var(--bg);flex-direction:column;align-items:stretch;padding:20px;gap:2px;overflow-y:auto;z-index:400;}
+  nav.open{display:flex;}
+  nav a{padding:14px 12px;border-bottom:1px solid var(--line);border-radius:0;}
+  .hamburger{display:flex;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-visual{height:220px;order:-1;}
+  .stats-inner{grid-template-columns:repeat(2,1fr);}
+  .about-grid{grid-template-columns:1fr;}
+  .about-graphic{order:-1;max-width:280px;margin:0 auto;}
+  .prog-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr;gap:28px;}
+  .join-banner{padding:36px 26px;}
+}
+
+/* ===== SPLASH / LOADING SCREEN ===== */
+#splash{
+  position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:34px;padding:24px;
+  background:radial-gradient(ellipse at 50% 45%,#1B3A6B 0%,#14315C 38%,#0D1B2A 100%);
+  transition:opacity .7s ease,visibility .7s ease;
+}
+#splash.done{opacity:0;visibility:hidden;}
+body.loading{overflow:hidden;}
+.sp-logo{position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center;}
+.sp-logo::before{
+  content:"";position:absolute;inset:-30px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,130,31,.28) 0%,rgba(245,130,31,0) 68%);
+}
+.sp-disc{
+  position:relative;width:150px;height:150px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 0 4px rgba(245,130,31,.55),0 10px 30px rgba(0,0,0,.35);
+  animation:sp-breathe 2.6s ease-in-out infinite;
+}
+.sp-disc img{width:100%;height:100%;border-radius:50%;display:block;}
+.sp-ring{position:absolute;inset:0;width:100%;height:100%;}
+.sp-ring circle{fill:none;stroke-linecap:round;}
+.sp-ring .r1{stroke:#F5821F;stroke-width:3;stroke-dasharray:190 300;transform-origin:50% 50%;animation:sp-spin 2.4s linear infinite;}
+.sp-ring .r2{stroke:rgba(255,255,255,.3);stroke-width:2;stroke-dasharray:110 300;transform-origin:50% 50%;animation:sp-spin 3.8s linear infinite reverse;}
+.sp-name{
+  font-family:'Montserrat',sans-serif;font-weight:500;color:#E9EEF7;text-align:center;
+  font-size:clamp(.78rem,3.3vw,1.05rem);letter-spacing:.32em;text-transform:uppercase;
+}
+.sp-bar{width:min(255px,62vw);height:3px;border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:-14px;}
+.sp-bar i{display:block;height:100%;width:0;background:#F5821F;border-radius:3px;transition:width .5s ease;}
+@keyframes sp-spin{to{transform:rotate(360deg);}}
+@keyframes sp-breathe{50%{transform:scale(1.04);}}
+@media (prefers-reduced-motion:reduce){
+  .sp-ring .r1,.sp-ring .r2,.sp-disc{animation:none;}
+}
+</style></head>
+<body class="loading">
+
+<div id="splash" role="status" aria-live="polite" aria-label="Loading">
+  <div class="sp-logo">
+    <svg class="sp-ring" viewBox="0 0 170 170" aria-hidden="true">
+      <circle class="r2" cx="85" cy="85" r="80"/>
+      <circle class="r1" cx="85" cy="85" r="72"/>
+    </svg>
+    <div class="sp-disc">
+      <img src="logo.webp" loading="eager" decoding="async" alt="NextEra Youth Network logo" width="150" height="150">
+    </div>
+  </div>
+  <div class="sp-name">NextEra Youth Network</div>
+  <div class="sp-bar"><i id="sp-fill"></i></div>
+</div>
+
+
+
+<header>
+  <div class="hdr-inner">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 78 L8 22 L30 58 L30 22 L38 22 L38 78 L30 78 L8 44 Z" fill="var(--navy)"/>
+        <path d="M62 78 L62 22 L70 22 L70 58 L92 22 L92 78 L84 78 L84 44 Z" fill="var(--navy)"/>
+        <path d="M42 22 L50 40 L58 22 L68 22 L54 48 L54 78 L46 78 L46 48 L32 22 Z" fill="var(--orange)"/>
+        <circle cx="50" cy="16" r="9" fill="var(--orange)"/>
+      </svg>
+      <span class="brand-text">NextEra<span> Youth</span> Network</span>
+    </a>
+    <nav id="nav">
+      <a href="index.html#about">About</a>
+      <a href="team.html">Team</a>
+      <a href="programs.html">Programs</a>
+      <a href="index.html#join">Get Involved</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <a href="index.html#join" class="btn btn-orange">Join Us</a>
+      <button class="hamburger" id="hbtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<section class="section" style="padding-bottom:20px;">
+  <div class="wrap">
+    <div class="section-head" style="margin-bottom:0;">
+      <div class="section-tag">The People Behind It</div>
+      <h2>Meet the team</h2>
+      <p>The people who plan, run, and show up for every program.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="team" style="padding-top:10px;">
+  <div class="wrap">
+    <div class="team-grid" id="team-grid">
+      <div class="team-card"><p style="color:var(--muted);padding:20px;">Loading team...</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">
+          <svg class="brand-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 78 L8 22 L30 58 L30 22 L38 22 L38 78 L30 78 L8 44 Z" fill="#fff"/>
+            <path d="M62 78 L62 22 L70 22 L70 58 L92 22 L92 78 L84 78 L84 44 Z" fill="#fff"/>
+            <path d="M42 22 L50 40 L58 22 L68 22 L54 48 L54 78 L46 78 L46 48 L32 22 Z" fill="var(--orange)"/>
+            <circle cx="50" cy="16" r="9" fill="var(--orange)"/>
+          </svg>
+          <span>NextEra<em> Youth</em> Network</span>
+        </div>
+        <p class="desc" id="c-footer-desc">A youth-led organization turning ideas into real-world impact through leadership training, workshops, and community projects.</p>
+      </div>
+      <div>
+        <h4>Navigate</h4>
+        <nav>
+          <a href="index.html#about">About</a>
+          <a href="team.html">Team</a>
+          <a href="programs.html">Programs</a>
+          <a href="index.html#join">Get Involved</a>
+          <a href="index.html#contact">Contact</a>
+        </nav>
+      </div>
+      <div>
+        <h4>Connect</h4>
+        <nav>
+          <a href="#" id="c-social-fb" target="_blank" rel="noopener">Facebook</a>
+          <a href="#" id="c-social-ig" target="_blank" rel="noopener">Instagram</a>
+          <a href="#" id="c-social-li" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 NextEra Youth Network. All rights reserved.</p>
+      <p>Where Ideas Meet Impact</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Splash screen: stays until BOTH Firestore loads (site text + programs) finish,
+// but never shorter than 1.6s (smooth) and never longer than 7s (safety net).
+(function(){
+  var fill=document.getElementById('sp-fill'), splash=document.getElementById('splash');
+  var start=Date.now(), pending=2, finished=false;
+  var pct=14; fill.style.width=pct+'%';
+  var tick=setInterval(function(){ pct+= (92-pct)*0.3; fill.style.width=pct+'%'; },180);
+  function finish(){
+    if(finished) return; finished=true; clearInterval(tick);
+    fill.style.width='100%';
+    setTimeout(function(){
+      splash.classList.add('done');
+      document.body.classList.remove('loading');
+      setTimeout(function(){ splash.remove(); },800);
+    },450);
+  }
+  function check(){
+    if(pending>0) return;
+    var wait=Math.max(0,650-(Date.now()-start));
+    setTimeout(finish,wait);
+  }
+  window.nynMark=function(){ pending--; check(); };
+  setTimeout(finish,4000);
+})();
+</script>
+
+<div class="jf-toast" id="toast"><span id="t-msg"></span></div>
+
+<!-- Firebase (for CMS content loaded from Admin panel) -->
+<script type="module" src="firebase-config.js"></script>
+<script src="data.js"></script>
+
+<script>
+let siteContent = {};
+
+document.getElementById('hbtn').addEventListener('click', () => {
+  document.getElementById('nav').classList.toggle('open');
+});
+document.querySelectorAll('#nav a').forEach(a => a.addEventListener('click', () => {
+  document.getElementById('nav').classList.remove('open');
+}));
+
+// Subtle header elevation once the page scrolls — a quiet premium touch, not a repaint on every frame.
+(function(){
+  const hdr = document.querySelector('header');
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      hdr.classList.toggle('scrolled', window.scrollY > 8);
+      ticking = false;
+    });
+  }, { passive: true });
+})();
+
+
+
+// Pull admin-edited content from Firestore and overwrite the page's
+// hardcoded defaults wherever a value was actually saved. If Firestore
+// has nothing yet (or fails to load), the defaults already in the HTML
+// stay exactly as they are — the page never looks broken or empty.
+document.addEventListener('DOMContentLoaded', async () => {
+  await waitForFirebase();
+  const content = await loadSiteContent();
+  siteContent = content || {};
+  if (!content) { window.nynMark && window.nynMark(); return; }
+
+  const setText = (id, val) => {
+    if (val === undefined || val === null || val === '') return;
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+  const setHref = (id, val) => {
+    if (!val) return;
+    const el = document.getElementById(id);
+    if (el) el.href = val;
+  };
+
+  setText('c-hero-eyebrow', content.hero?.eyebrow);
+  setText('c-hero-headline', content.hero?.headline);
+  setText('c-hero-sub', content.hero?.sub);
+
+  (content.stats || []).forEach((s, i) => {
+    setText(`c-stat${i + 1}-num`, s?.num);
+    setText(`c-stat${i + 1}-label`, s?.label);
+  });
+
+  setText('c-about-title', content.about?.title);
+  setText('c-about-text1', content.about?.text1);
+  setText('c-about-text2', content.about?.text2);
+
+  setText('c-join-title', content.joinBanner?.title);
+  setText('c-join-text', content.joinBanner?.text);
+
+  setText('c-contact-email', content.contact?.email);
+  setText('c-contact-phone', content.contact?.phone);
+  setText('c-contact-location', content.contact?.location);
+
+  setHref('c-social-fb', content.social?.facebook);
+  setHref('c-social-ig', content.social?.instagram);
+  setHref('c-social-li', content.social?.linkedin);
+
+  setText('c-footer-desc', content.footerDesc);
+  window.nynMark && window.nynMark();
+});
+
+
+
+// Team members — separate collection, managed from Admin → Team.
+document.addEventListener('DOMContentLoaded', async () => {
+  await waitForFirebase();
+  const all = await loadTeam();
+  const team = all.filter(t => t.status !== 'draft');
+  const grid = document.getElementById('team-grid');
+
+  if (!team.length) {
+    grid.innerHTML = `<div class="team-card"><p style="color:var(--muted);">Team profiles coming soon.</p></div>`;
+    window.nynMark && window.nynMark();
+    return;
+  }
+
+  const initials = (name) => (name || '').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+
+  grid.innerHTML = team.map(t => `
+    <div class="team-card">
+      ${t.photo ? `<img class="team-photo" src="${t.photo}" alt="${t.name}" loading="lazy" decoding="async">` : `<div class="team-photo-ph">${initials(t.name)}</div>`}
+      <div class="team-info">
+        <h3>${t.name}</h3>
+        ${t.role ? `<span class="team-role">${t.role}</span>` : ''}
+        ${t.bio ? `<p class="team-bio">${t.bio}</p>` : ''}
+      </div>
+    </div>`).join('');
+  window.nynMark && window.nynMark();
+});
+
+
+</script>
+
+</body>
+</html>
