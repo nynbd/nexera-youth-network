@@ -55,9 +55,12 @@ export default {
       });
     }
 
+    // streamGenerateContent + alt=sse makes Gemini send the reply in small
+    // chunks (Server-Sent Events) as it's generated, instead of one big
+    // blob at the end — that's what lets the widget show text live.
     const url =
       "https://generativelanguage.googleapis.com/v1beta/models/" +
-      GEMINI_MODEL + ":generateContent?key=" + env.GEMINI_API_KEY;
+      GEMINI_MODEL + ":streamGenerateContent?alt=sse&key=" + env.GEMINI_API_KEY;
 
     try {
       const geminiRes = await fetch(url, {
@@ -65,10 +68,15 @@ export default {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      const data = await geminiRes.text(); // pass through as-is
-      return new Response(data, {
+      // Pass the stream straight through, unbuffered, so the browser
+      // receives each chunk the moment Gemini sends it.
+      return new Response(geminiRes.body, {
         status: geminiRes.status,
-        headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+        headers: {
+          "Content-Type": "text/event-stream; charset=utf-8",
+          "Cache-Control": "no-cache",
+          ...CORS_HEADERS,
+        },
       });
     } catch (err) {
       return new Response(JSON.stringify({ error: String(err) }), {
