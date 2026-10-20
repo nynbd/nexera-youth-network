@@ -8,7 +8,7 @@
   // ---- Config ----------------------------------------------------------
   // The real Gemini key lives on the Cloudflare Worker (see cloudflare-worker.js),
   // never here — this URL is just the Worker's public address, safe to expose.
-  var WORKER_URL = "https://yn-chatbot.nexterayouthnetwork.workers.dev";
+  var WORKER_URL = "https://nyn-chatbot.nexterayouthnetwork.workers.dev";
 
   // Grounding context — kept short so every request stays cheap & fast.
   var SYSTEM_INSTRUCTION =
