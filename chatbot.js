@@ -6,11 +6,9 @@
    ============================================================ */
 (function () {
   // ---- Config ----------------------------------------------------------
-  var GEMINI_API_KEY = "AQ.Ab8RN6IqGthu50IW9vwequ0DOPMn2Ka7wnq5BALoJoL4POFoBg";
-  var GEMINI_MODEL = "gemini-flash-latest";
-  var GEMINI_URL =
-    "https://generativelanguage.googleapis.com/v1beta/models/" +
-    GEMINI_MODEL + ":generateContent?key=" + GEMINI_API_KEY;
+  // The real Gemini key lives on the Cloudflare Worker (see cloudflare-worker.js),
+  // never here — this URL is just the Worker's public address, safe to expose.
+  var WORKER_URL = "https://yn-chatbot.nexterayouthnetwork.workers.dev";
 
   // Grounding context — kept short so every request stays cheap & fast.
   var SYSTEM_INSTRUCTION =
@@ -196,7 +194,7 @@
   function askGemini() {
     sendBtn.disabled = true;
     showTyping();
-    fetch(GEMINI_URL, {
+    fetch(WORKER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
