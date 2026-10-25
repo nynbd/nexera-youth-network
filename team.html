@@ -53,16 +53,20 @@ header.scrolled{box-shadow:0 8px 24px rgba(13,27,42,.08);}
 .brand-text span{color:var(--orange);}
 nav{display:flex;align-items:center;gap:6px;}
 nav a{
-  text-decoration:none;color:var(--muted);font-size:.92rem;font-weight:600;
+  position:relative;text-decoration:none;color:var(--muted);font-size:.92rem;font-weight:600;
   padding:9px 14px;border-radius:var(--r-sm);transition:color .2s,background .2s;white-space:nowrap;
 }
+nav a::after{content:"";position:absolute;left:14px;right:14px;bottom:5px;height:2px;background:var(--orange);border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform .25s cubic-bezier(.2,.8,.2,1);}
 nav a:hover{color:var(--navy);background:var(--bg-alt);}
+nav a:hover::after{transform:scaleX(1);}
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:11px 22px;border-radius:var(--r-sm);font-weight:700;font-size:.9rem;
   border:none;text-decoration:none;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,opacity .2s;
 }
-.btn-orange{background:linear-gradient(135deg,var(--orange),var(--orange-dk));color:#fff;box-shadow:0 6px 20px rgba(245,130,31,.32);}
+.btn-orange{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--orange),var(--orange-dk));color:#fff;box-shadow:0 6px 20px rgba(245,130,31,.32);}
+.btn-orange::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.4),transparent);transform:skewX(-20deg);transition:left .65s ease;}
+.btn-orange:hover::before{left:130%;}
 .btn-orange:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(245,130,31,.4);}
 .btn-orange:active{transform:translateY(0);box-shadow:0 4px 14px rgba(245,130,31,.3);}
 .btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--line);}
@@ -77,8 +81,12 @@ nav a:hover{color:var(--navy);background:var(--bg-alt);}
   position:relative;color:#fff;overflow:hidden;padding:80px 0 0;
   background:radial-gradient(ellipse 800px 520px at 12% 18%,rgba(245,130,31,.12),transparent 60%),linear-gradient(165deg,var(--navy-dk),var(--navy) 130%);
 }
+.hero::before,.hero::after{content:"";position:absolute;z-index:0;border-radius:50%;filter:blur(64px);pointer-events:none;}
+.hero::before{width:380px;height:380px;background:rgba(245,130,31,.28);top:-130px;right:-90px;animation:blobFloat 11s ease-in-out infinite;}
+.hero::after{width:300px;height:300px;background:rgba(27,58,107,.55);bottom:-150px;left:8%;animation:blobFloat 14s ease-in-out infinite reverse;}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-22px,24px) scale(1.08);}}
 .hero-inner{
-  max-width:1120px;margin:0 auto;padding:0 24px 90px;
+  position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 24px 90px;
   display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;
 }
 .hero-eyebrow{color:var(--orange-lt);font-weight:700;font-size:.85rem;margin-bottom:18px;}
@@ -87,7 +95,29 @@ nav a:hover{color:var(--navy);background:var(--bg-alt);}
 .hero p{color:#C7D2E3;font-size:1.06rem;max-width:480px;margin-bottom:34px;}
 .hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
 .hero-visual{position:relative;height:360px;}
-.hero-visual svg{width:100%;height:100%;}
+.hero-visual svg{width:100%;height:100%;animation:heroFloat 6s ease-in-out infinite;}
+@keyframes heroFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+
+/* ===== PREMIUM ENTRANCE + SCROLL REVEAL ===== */
+.hero-eyebrow,.hero h1,.hero p,.hero-actions,.hero-visual{opacity:0;transform:translateY(18px);}
+body.loaded .hero-eyebrow{animation:heroIn .7s cubic-bezier(.16,.84,.44,1) .1s forwards;}
+body.loaded .hero h1{animation:heroIn .7s cubic-bezier(.16,.84,.44,1) .22s forwards;}
+body.loaded .hero p{animation:heroIn .7s cubic-bezier(.16,.84,.44,1) .34s forwards;}
+body.loaded .hero-actions{animation:heroIn .7s cubic-bezier(.16,.84,.44,1) .46s forwards;}
+body.loaded .hero-visual{animation:heroIn .9s cubic-bezier(.16,.84,.44,1) .3s forwards;}
+@keyframes heroIn{to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.16,.84,.44,1),transform .7s cubic-bezier(.16,.84,.44,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-stagger .reveal:nth-child(1){transition-delay:.04s;}
+.reveal-stagger .reveal:nth-child(2){transition-delay:.11s;}
+.reveal-stagger .reveal:nth-child(3){transition-delay:.18s;}
+.reveal-stagger .reveal:nth-child(4){transition-delay:.25s;}
+.reveal-stagger .reveal:nth-child(5){transition-delay:.32s;}
+.reveal-stagger .reveal:nth-child(6){transition-delay:.39s;}
+@media (prefers-reduced-motion:reduce){
+  .hero-eyebrow,.hero h1,.hero p,.hero-actions,.hero-visual,.reveal{animation:none!important;transition:none!important;opacity:1!important;transform:none!important;}
+  .hero::before,.hero::after,.hero-visual svg{animation:none!important;}
+}
 
 /* ===== STATS STRIP ===== */
 .stats{background:var(--bg-alt);border-bottom:1px solid var(--line);}
@@ -314,7 +344,7 @@ body.loading{overflow:hidden;}
 </header>
 <section class="section" style="padding-bottom:20px;">
   <div class="wrap">
-    <div class="section-head" style="margin-bottom:0;">
+    <div class="section-head reveal" style="margin-bottom:0;">
       <div class="section-tag">The People Behind It</div>
       <h2>Meet the team</h2>
       <p>The people who plan, run, and show up for every program.</p>
@@ -324,7 +354,7 @@ body.loading{overflow:hidden;}
 
 <section class="section" id="team" style="padding-top:10px;">
   <div class="wrap">
-    <div class="team-grid" id="team-grid">
+    <div class="team-grid reveal-stagger" id="team-grid">
       <div class="team-card"><p style="color:var(--muted);padding:20px;">Loading team...</p></div>
     </div>
   </div>
@@ -385,6 +415,7 @@ body.loading{overflow:hidden;}
     setTimeout(function(){
       splash.classList.add('done');
       document.body.classList.remove('loading');
+      document.body.classList.add('loaded');
       setTimeout(function(){ splash.remove(); },800);
     },450);
   }
@@ -429,6 +460,71 @@ document.querySelectorAll('#nav a').forEach(a => a.addEventListener('click', () 
       ticking = false;
     });
   }, { passive: true });
+})();
+
+// Premium scroll-reveal + stat count-up engine. Defensive by design: if
+// IntersectionObserver isn't supported, or anything here fails, content
+// is still shown — never hidden because of a script error.
+(function(){
+  var supportsIO = 'IntersectionObserver' in window;
+  var io = supportsIO ? new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }) : null;
+
+  window.nynReveal = function(root){
+    try {
+      var scope = root || document;
+      var els = scope.querySelectorAll('.reveal:not(.nyn-seen)');
+      els.forEach(function(el){
+        el.classList.add('nyn-seen');
+        if (io) io.observe(el);
+        else el.classList.add('visible');
+      });
+    } catch (e) { /* never let this break the page */ }
+  };
+
+  // Safety net: whatever happens, don't leave content invisible for long.
+  setTimeout(function(){
+    document.querySelectorAll('.reveal:not(.visible)').forEach(function(el){
+      el.classList.add('visible');
+    });
+  }, 6000);
+
+  function countUp(el){
+    var raw = (el.textContent || '').trim();
+    var m = raw.match(/^(\d+)(.*)$/);
+    if (!m) return;
+    var target = parseInt(m[1], 10), suffix = m[2] || '', startT = null, dur = 1200;
+    function step(ts){
+      if (!startT) startT = ts;
+      var p = Math.min(1, (ts - startT) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var statsStrip = document.querySelector('.stats-inner');
+  if (statsStrip && supportsIO) {
+    var counted = false;
+    var statIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting && !counted) {
+          counted = true;
+          statsStrip.querySelectorAll('.stat-num').forEach(countUp);
+          statIO.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    statIO.observe(statsStrip);
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){ window.nynReveal(); });
 })();
 
 
@@ -500,7 +596,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const initials = (name) => (name || '').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
 
   grid.innerHTML = team.map(t => `
-    <div class="team-card">
+    <div class="team-card reveal">
       ${t.photo ? `<img class="team-photo" src="${t.photo}" alt="${t.name}" loading="lazy" decoding="async">` : `<div class="team-photo-ph">${initials(t.name)}</div>`}
       <div class="team-info">
         <h3>${t.name}</h3>
@@ -508,6 +604,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         ${t.bio ? `<p class="team-bio">${t.bio}</p>` : ''}
       </div>
     </div>`).join('');
+  window.nynReveal && window.nynReveal(grid);
   window.nynMark && window.nynMark();
 });
 

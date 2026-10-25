@@ -194,7 +194,6 @@
   function askGemini() {
     sendBtn.disabled = true;
     showTyping();
-
     fetch(WORKER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -204,68 +203,23 @@
         generationConfig: { temperature: 0.6, maxOutputTokens: 160 }
       })
     })
-      .then(function (res) {
-        if (!res.ok || !res.body) throw new Error("bad response");
-
-        var reader = res.body.getReader();
-        var decoder = new TextDecoder();
-        var buffer = "";
-        var fullText = "";
-        var bubble = null;
-
-        function handleChunk(jsonStr) {
-          if (!jsonStr) return;
-          var obj;
-          try {
-            obj = JSON.parse(jsonStr);
-          } catch (e) {
-            return; // incomplete/malformed chunk, skip it
-          }
-          var piece =
-            obj &&
-            obj.candidates &&
-            obj.candidates[0] &&
-            obj.candidates[0].content &&
-            obj.candidates[0].content.parts &&
-            obj.candidates[0].content.parts[0] &&
-            obj.candidates[0].content.parts[0].text;
-          if (!piece) return;
-          if (!bubble) {
-            hideTyping();
-            bubble = addBubble("model", "");
-          }
-          fullText += piece;
-          bubble.textContent = fullText;
-          msgsEl.scrollTop = msgsEl.scrollHeight;
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        hideTyping();
+        sendBtn.disabled = false;
+        var reply =
+          data &&
+          data.candidates &&
+          data.candidates[0] &&
+          data.candidates[0].content &&
+          data.candidates[0].content.parts &&
+          data.candidates[0].content.parts[0] &&
+          data.candidates[0].content.parts[0].text;
+        if (!reply) {
+          reply = "দুঃখিত, এই মুহূর্তে উত্তর দিতে পারছি না। একটু পরে আবার চেষ্টা করুন।";
         }
-
-        function pump() {
-          return reader.read().then(function (result) {
-            if (result.done) return;
-            buffer += decoder.decode(result.value, { stream: true });
-            var events = buffer.split("\n\n");
-            buffer = events.pop(); // keep the last (possibly incomplete) event
-            for (var i = 0; i < events.length; i++) {
-              var lines = events[i].split("\n");
-              for (var j = 0; j < lines.length; j++) {
-                if (lines[j].indexOf("data:") === 0) {
-                  handleChunk(lines[j].slice(5).trim());
-                }
-              }
-            }
-            return pump();
-          });
-        }
-
-        return pump().then(function () {
-          sendBtn.disabled = false;
-          if (!fullText) {
-            hideTyping();
-            addBubble("model", "দুঃখিত, এই মুহূর্তে উত্তর দিতে পারছি না। একটু পরে আবার চেষ্টা করুন।");
-            return;
-          }
-          history.push({ role: "model", parts: [{ text: fullText }] });
-        });
+        addBubble("model", reply);
+        history.push({ role: "model", parts: [{ text: reply }] });
       })
       .catch(function () {
         hideTyping();
