@@ -109,6 +109,7 @@ textarea.fi{min-height:70px;resize:vertical;}
 .bs.contacted{background:rgba(245,130,31,.14);color:var(--orange-dk);}
 .bs.approved{background:rgba(34,197,94,.14);color:#1a9c5a;}
 .bs.rejected{background:rgba(192,57,43,.14);color:#c0392b;}
+.bs.completed{background:rgba(20,49,92,.14);color:#14315C;}
 .ff-row{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px;flex-wrap:wrap;}
 .ff-row input[type="text"]{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);color:var(--ink);padding:8px 11px;border-radius:6px;font-size:.85rem;outline:none;font-family:inherit;}
 .ff-row select{background:var(--card);border:1px solid var(--line);color:var(--ink);padding:8px 9px;border-radius:6px;font-size:.82rem;outline:none;font-family:inherit;}
@@ -482,8 +483,10 @@ textarea.fi{min-height:70px;resize:vertical;}
         <option value="new">New</option>
         <option value="contacted">Contacted</option>
         <option value="approved">Approved</option>
+        <option value="completed">Completed (certificate ready)</option>
         <option value="rejected">Rejected</option>
       </select>
+      <p style="font-size:.78rem;color:var(--muted);margin-top:6px;">Set to "Completed" once they've finished the program — they can then look themselves up on the <strong>certificate.html</strong> page to download their certificate.</p>
     </div>
     <div class="fm-foot">
       <button class="fc-btn" onclick="closePartForm()">Cancel</button>
